@@ -5,7 +5,7 @@
   "author": "Andrew Arpasi <andrew@andrewarpasi.com>",
   "license": "MIT",
   "scripts": {
-    "bundle": "watchify src/app.js -o bundle.min.js"
+    "bundle": "watchify src/app.js -o bundle.js"
   },
   "dependencies": {
     "aframe": "^0.7.1"
