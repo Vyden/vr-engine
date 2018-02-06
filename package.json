@@ -1,0 +1,13 @@
+{
+  "name": "VREngine",
+  "version": "1.0.0",
+  "main": "src/app.js",
+  "author": "Andrew Arpasi <andrew@andrewarpasi.com>",
+  "license": "MIT",
+  "scripts": {
+    "bundle": "watchify src/app.js -o bundle.min.js"
+  },
+  "dependencies": {
+    "aframe": "^0.7.1"
+  }
+}
