@@ -82630,7 +82630,18 @@ module.exports = getWakeLock();
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],2:[function(require,module,exports){
 require('./dependencies')
-},{"./dependencies":3}],3:[function(require,module,exports){
+require('./stage')
+},{"./dependencies":3,"./stage":4}],3:[function(require,module,exports){
 require('aframe')
 
-},{"aframe":1}]},{},[2]);
+},{"aframe":1}],4:[function(require,module,exports){
+AFRAME.registerComponent('stage', {
+    init: function() {
+        
+    }
+
+    
+})
+
+
+},{}]},{},[2]);
