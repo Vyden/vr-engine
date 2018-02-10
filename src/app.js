@@ -1,2 +1,3 @@
 require('./dependencies')
-require('./stage')
+const StageController = require('./stage')
+StageController.registerComponent()
