@@ -1,6 +1,7 @@
 const dependencies = require('./dependencies')
 const StageController = require('./stage')
 const VideoController = require('./video')
+const SceneController = require('./scene')
 const $ = dependencies.jquery
 
 StageController.registerComponent()
@@ -8,6 +9,12 @@ VideoController.registerComponent()
 
 const playing = false;
 
+$(() => {
+    SceneController.initScene()
+})
+
+
+/*
 $(document).click(function() {
     //alert( "Handler for .click() called." );
     if(!playing) {
@@ -23,3 +30,4 @@ setInterval(()=> {
         document.getElementById('matter').pause();
     }
 },3000)
+*/

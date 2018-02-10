@@ -32,6 +32,10 @@ const PrimitiveObjectsController = {
                 </a-text>
             </a-entity>
         `)
+    },
+
+    getTapToBegin() {
+        
     }
 }
 

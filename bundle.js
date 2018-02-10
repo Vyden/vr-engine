@@ -97182,6 +97182,7 @@ return jQuery;
 const dependencies = require('./dependencies')
 const StageController = require('./stage')
 const VideoController = require('./video')
+const SceneController = require('./scene')
 const $ = dependencies.jquery
 
 StageController.registerComponent()
@@ -97189,6 +97190,12 @@ VideoController.registerComponent()
 
 const playing = false;
 
+$(() => {
+    SceneController.initScene()
+})
+
+
+/*
 $(document).click(function() {
     //alert( "Handler for .click() called." );
     if(!playing) {
@@ -97204,8 +97211,8 @@ setInterval(()=> {
         document.getElementById('matter').pause();
     }
 },3000)
-
-},{"./dependencies":6,"./stage":8,"./video":9}],6:[function(require,module,exports){
+*/
+},{"./dependencies":6,"./scene":8,"./stage":9,"./video":10}],6:[function(require,module,exports){
 module.exports.jquery = require('jquery')
 module.exports.aframe = require('aframe')
 module.exports.htmlShader = require('aframe-html-shader')
@@ -97245,11 +97252,46 @@ const PrimitiveObjectsController = {
                 </a-text>
             </a-entity>
         `)
+    },
+
+    getTapToBegin() {
+        
     }
 }
 
 module.exports = PrimitiveObjectsController
 },{"./dependencies":6}],8:[function(require,module,exports){
+const dependencies = require('./dependencies')
+const $ = dependencies.jquery
+
+const SceneController = {
+    initScene() {
+        //will be dynamic, for now use sample video
+        $('#videoPlane').attr('visible',false);
+        this.videoURL = 'https://vyden.nyc3.digitaloceanspaces.com/videos/do_u_know_da_way_(original_video).mp4'
+        $('#video').attr('src',this.videoURL)
+        this.userInitialized = false
+        $(document).click(function() {
+            if(!this.userInitialized) this.userStartScene()
+        }.bind(this))
+    },
+
+    userStartScene() {
+        this.userInitialized = true
+        $('#lecStart').remove()
+        $('#videoPlane').attr('visible',true)
+        document.getElementById('video').play()
+        setTimeout(()=>{
+            document.getElementById('video').pause()
+        },200)
+        setTimeout(()=>{
+            document.getElementById('video').play()
+        },5000)
+    }
+}
+
+module.exports = SceneController
+},{"./dependencies":6}],9:[function(require,module,exports){
 const dependencies = require('./dependencies')
 const PrimitiveObjects = require('./primitiveObjects')
 const $ = dependencies.jquery
@@ -97274,7 +97316,7 @@ const StageController = {
 }
 
 module.exports = StageController
-},{"./dependencies":6,"./primitiveObjects":7}],9:[function(require,module,exports){
+},{"./dependencies":6,"./primitiveObjects":7}],10:[function(require,module,exports){
 const dependencies = require('./dependencies')
 const PrimitiveObjects = require('./primitiveObjects')
 const $ = dependencies.jquery
@@ -97294,6 +97336,16 @@ const VideoController = {
 
         })
     },
+
+    getVideoAssetTag(url) {
+        return $(`<video id="video" src="${url}"></video>`)
+    },
+
+    getVideoPlane() {
+        return $(`
+        <a-video src="#video" width="16" height="9" position="0 10 8"></a-video>
+        `)
+    }
     
 }
 

@@ -17,6 +17,16 @@ const VideoController = {
 
         })
     },
+
+    getVideoAssetTag(url) {
+        return $(`<video id="video" src="${url}"></video>`)
+    },
+
+    getVideoPlane() {
+        return $(`
+        <a-video src="#video" width="16" height="9" position="0 10 8"></a-video>
+        `)
+    }
     
 }
 
