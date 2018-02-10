@@ -1,3 +1,6 @@
+const dependencies = require('./dependencies')
+const $ = dependencies.jquery
+
 const StageController = {
     registerComponent() {
         AFRAME.registerComponent('stage', {

@@ -1,3 +1,2 @@
-var $ = require('jquery')
-
-require('aframe')
+module.exports.jquery = require('jquery')
+module.exports.aframe = require('aframe')
