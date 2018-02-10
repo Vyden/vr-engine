@@ -7,28 +7,32 @@
     <script src="bundle.js"></script>
   </head>
   <body>
-    <a-scene>
-      <a-assets>
-        <img id="groundTexture" src="https://cdn.aframe.io/a-painter/images/floor.jpg" crossorigin="anonymous">
-        <img id="skyTexture" src="https://cdn.aframe.io/a-painter/images/sky.jpg" crossorigin="anonymous">
-      </a-assets>
+      <a-scene>
+          <a-assets>
+            <img id="groundTexture" src="https://cdn.aframe.io/a-painter/images/floor.jpg" crossorigin="anonymous">
+            <img id="skyTexture" src="https://cdn.aframe.io/a-painter/images/sky.jpg" crossorigin="anonymous">
+            <video id="matter" src="https://vyden.nyc3.digitaloceanspaces.com/videos/Sequence%2001_2.mp4"></video>
+          </a-assets>
+    
+          <a-entity position="0 6 0" camera look-controls>
+            <a-cursor id="cursor" color="yellow"></a-cursor>
+          </a-entity>
+    
+          <a-entity stage position="0 0.1 -24">
+            <a-entity video></a-entity>
+            <a-video src="#matter" width="16" height="9" position="0 10 8"></a-video>
+            <!-- <a-entity video-controls="src:#matter" scale="10 10 10" position="0 6 14"></a-entity> -->
+          </a-entity>
+    
+          <!-- Background sky. -->
+          <a-sky height="2048" radius="100" src="#skyTexture" theta-length="90" width="2048"></a-sky>
+    
+          <!-- Ground. -->
+          <a-circle src="#groundTexture" rotation="-90 0 0" position="0 0.1 0" radius="100"></a-circle>
+          
+          
+        </a-scene>
+    
 
-      <a-entity position="0 6 0" camera look-controls></a-entity>
-
-      <a-entity stage position="0 0.1 -24">
-        
-        
-        
-        </a-entity>
-      </a-entity>
-
-      <!-- Background sky. -->
-      <a-sky height="2048" radius="100" src="#skyTexture" theta-length="90" width="2048"></a-sky>
-
-      <!-- Ground. -->
-      <a-circle src="#groundTexture" rotation="-90 0 0" position="0 0.1 0" radius="100"></a-circle>
-
-      
-    </a-scene>
   </body>
 </html>

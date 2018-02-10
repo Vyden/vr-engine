@@ -7,19 +7,17 @@ const StageController = {
         AFRAME.registerComponent('stage', {
             init: function() {
                 console.log(this)
-                $(this.el).append(PrimitiveObjects.getCircularStage())
-                $(this.el).append(PrimitiveObjects.getLoading())
-                StageController.stage = this
+                StageController.component = this
             },
 
             clear() {
-                $(this.el).empty();
+                $(this.el).empty()
+            },
+
+            presentEntity(entity) {
+                
             }
         })
-    },
-
-    presentEntity(entity) {
-        
     }
 }
 
