@@ -1,4 +1,5 @@
 const dependencies = require('./dependencies')
+const PrimitiveObjects = require('./primitiveObjects')
 const $ = dependencies.jquery
 
 const StageController = {
@@ -6,7 +7,14 @@ const StageController = {
         AFRAME.registerComponent('stage', {
             init: function() {
                 console.log(this)
-            }    
+                $(this.el).append(PrimitiveObjects.getCircularStage())
+                $(this.el).append(PrimitiveObjects.getLoading())
+                StageController.stage = this
+            },
+
+            clear() {
+                $(this.el).empty();
+            }
         })
     },
 

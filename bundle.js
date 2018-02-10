@@ -92998,7 +92998,7 @@ return jQuery;
 require('./dependencies')
 const StageController = require('./stage')
 StageController.registerComponent()
-},{"./dependencies":4,"./stage":5}],4:[function(require,module,exports){
+},{"./dependencies":4,"./stage":6}],4:[function(require,module,exports){
 module.exports.jquery = require('jquery')
 module.exports.aframe = require('aframe')
 
@@ -93006,12 +93006,59 @@ module.exports.aframe = require('aframe')
 const dependencies = require('./dependencies')
 const $ = dependencies.jquery
 
+const PrimitiveObjectsController = {
+    getVideoPlane() {
+        return $(`
+            <a-box id="videoPlane" scale="32 18 0.1" position="0 10 8"></a-box>
+        `)
+    },
+
+    getCircularStage() {
+        return $(`
+            <a-entity id="circularStage">
+                <a-cylinder color="#455A64" radius="16" height="0.1"></a-cylinder>
+                <a-cylinder color="#546E7A" radius="14" height="0.15"></a-cylinder>
+            </a-entity>
+        `)
+    },
+
+    getLoading() {
+        return $(`
+            <a-entity id="loadingIndicator">
+                <a-text value="Loading..." position="0 5 0" align="center" width="36">
+                <a-animation attribute="scale"
+                    dur="800"
+                    fill="forwards"
+                    to="1.2 1.2 1.2"
+                    direction="alternate"
+                    delay="0"
+                    easing="ease-in-out-sine"
+                    repeat="indefinite"></a-animation>
+                </a-text>
+            </a-entity>
+        `)
+    }
+}
+
+module.exports = PrimitiveObjectsController
+},{"./dependencies":4}],6:[function(require,module,exports){
+const dependencies = require('./dependencies')
+const PrimitiveObjects = require('./primitiveObjects')
+const $ = dependencies.jquery
+
 const StageController = {
     registerComponent() {
         AFRAME.registerComponent('stage', {
             init: function() {
                 console.log(this)
-            }    
+                $(this.el).append(PrimitiveObjects.getCircularStage())
+                $(this.el).append(PrimitiveObjects.getLoading())
+                StageController.stage = this
+            },
+
+            clear() {
+                $(this.el).empty();
+            }
         })
     },
 
@@ -93021,4 +93068,4 @@ const StageController = {
 }
 
 module.exports = StageController
-},{"./dependencies":4}]},{},[3]);
+},{"./dependencies":4,"./primitiveObjects":5}]},{},[3]);
