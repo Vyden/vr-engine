@@ -97194,24 +97194,6 @@ $(() => {
     SceneController.initScene()
 })
 
-
-/*
-$(document).click(function() {
-    //alert( "Handler for .click() called." );
-    if(!playing) {
-        document.getElementById('matter').play();
-        playing = true;
-    } 
-});
-
-setInterval(()=> {
-    if(document.getElementById('matter').paused) {
-        document.getElementById('matter').play();
-    } else {
-        document.getElementById('matter').pause();
-    }
-},3000)
-*/
 },{"./dependencies":6,"./scene":8,"./stage":9,"./video":11}],6:[function(require,module,exports){
 module.exports.jquery = require('jquery')
 module.exports.aframe = require('aframe')
@@ -97271,17 +97253,21 @@ const SceneController = {
         $('#videoPlane').attr('visible',false);
         this.videoURL = 'https://vyden.nyc3.digitaloceanspaces.com/videos/do_u_know_da_way_(original_video).mp4'
         $('#video').attr('src',this.videoURL)
-        this.userInitialized = false
-        $(document).click(function() {
-            if(!this.userInitialized) this.userStartScene()
-        }.bind(this))
+        
+        //set properties for desktop viewing
         if(!Util.isMobile()) {
             $('#lecStart').attr('value','Click anywhere to\n start the lecture...')
             $('.a-enter-vr').hide()
             $('#videoPlane').attr('position','0 10 16')
             $('#mainCamera').removeAttr('look-controls')
+            $(document).css('cursor','pointer !important')
         }
-        
+
+        //listen for user to start scene
+        this.userInitialized = false
+        $(document).click(function() {
+            if(!this.userInitialized) this.userStartScene()
+        }.bind(this))
     },
 
     userStartScene() {
@@ -97289,9 +97275,7 @@ const SceneController = {
         $('#lecStart').remove()
         $('#videoPlane').attr('visible',true)
         document.getElementById('video').play()
-        setTimeout(()=>{
-            document.getElementById('video').pause()
-        },200)
+        document.getElementById('video').pause()
         setTimeout(()=>{
             document.getElementById('video').play()
         },5000)

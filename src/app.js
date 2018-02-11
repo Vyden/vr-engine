@@ -12,22 +12,3 @@ const playing = false;
 $(() => {
     SceneController.initScene()
 })
-
-
-/*
-$(document).click(function() {
-    //alert( "Handler for .click() called." );
-    if(!playing) {
-        document.getElementById('matter').play();
-        playing = true;
-    } 
-});
-
-setInterval(()=> {
-    if(document.getElementById('matter').paused) {
-        document.getElementById('matter').play();
-    } else {
-        document.getElementById('matter').pause();
-    }
-},3000)
-*/
