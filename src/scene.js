@@ -1,4 +1,5 @@
 const dependencies = require('./dependencies')
+const Util = require('./util')
 const $ = dependencies.jquery
 
 const SceneController = {
@@ -11,6 +12,13 @@ const SceneController = {
         $(document).click(function() {
             if(!this.userInitialized) this.userStartScene()
         }.bind(this))
+        if(!Util.isMobile()) {
+            $('#lecStart').attr('value','Click anywhere to\n start the lecture...')
+            $('.a-enter-vr').hide()
+            $('#videoPlane').attr('position','0 10 16')
+            $('#mainCamera').removeAttr('look-controls')
+        }
+        
     },
 
     userStartScene() {

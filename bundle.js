@@ -97212,7 +97212,7 @@ setInterval(()=> {
     }
 },3000)
 */
-},{"./dependencies":6,"./scene":8,"./stage":9,"./video":10}],6:[function(require,module,exports){
+},{"./dependencies":6,"./scene":8,"./stage":9,"./video":11}],6:[function(require,module,exports){
 module.exports.jquery = require('jquery')
 module.exports.aframe = require('aframe')
 module.exports.htmlShader = require('aframe-html-shader')
@@ -97262,6 +97262,7 @@ const PrimitiveObjectsController = {
 module.exports = PrimitiveObjectsController
 },{"./dependencies":6}],8:[function(require,module,exports){
 const dependencies = require('./dependencies')
+const Util = require('./util')
 const $ = dependencies.jquery
 
 const SceneController = {
@@ -97274,6 +97275,13 @@ const SceneController = {
         $(document).click(function() {
             if(!this.userInitialized) this.userStartScene()
         }.bind(this))
+        if(!Util.isMobile()) {
+            $('#lecStart').attr('value','Click anywhere to\n start the lecture...')
+            $('.a-enter-vr').hide()
+            $('#videoPlane').attr('position','0 10 16')
+            $('#mainCamera').removeAttr('look-controls')
+        }
+        
     },
 
     userStartScene() {
@@ -97291,7 +97299,7 @@ const SceneController = {
 }
 
 module.exports = SceneController
-},{"./dependencies":6}],9:[function(require,module,exports){
+},{"./dependencies":6,"./util":10}],9:[function(require,module,exports){
 const dependencies = require('./dependencies')
 const PrimitiveObjects = require('./primitiveObjects')
 const $ = dependencies.jquery
@@ -97317,6 +97325,14 @@ const StageController = {
 
 module.exports = StageController
 },{"./dependencies":6,"./primitiveObjects":7}],10:[function(require,module,exports){
+const Utilities = {
+    isMobile() {
+        return (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))
+    }    
+}
+
+module.exports = Utilities
+},{}],11:[function(require,module,exports){
 const dependencies = require('./dependencies')
 const PrimitiveObjects = require('./primitiveObjects')
 const $ = dependencies.jquery

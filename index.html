@@ -14,15 +14,15 @@
             <video id="video" src="https://vyden.nyc3.digitaloceanspaces.com/videos/Sequence%2001_2.mp4"></video>
           </a-assets>
     
-          <a-entity camera look-controls position="0 6 0">
+          <a-entity id="mainCamera" camera look-controls position="0 10 0">
             <a-text id="lecStart" value="Tap anywhere to\n start lecture..." position="0 0 -1.5" align="center"></a-text>
+            <!-- <a-cursor id="cursor" color="yellow"></a-cursor> -->
           </a-entity>
           
           <a-entity stage position="0 0.1 -24">
             <a-entity video></a-entity>
-            <a-video id="videoPlane" src="#video" width="16" height="9" position="0 10 8"></a-video>
+            <a-video id="videoPlane" src="#video" width="20" height="11.25" position="0 12 8"></a-video>
             <!--<a-text value="Tap anywhere to\n start scene..." position="0 5 10" align="center" width="36"></a-text>-->
-            <!-- <a-entity video-controls="src:#matter" scale="10 10 10" position="0 6 14"></a-entity> -->
           </a-entity>
     
           <!-- Background sky. -->
