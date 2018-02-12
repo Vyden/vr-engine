@@ -97194,7 +97194,7 @@ $(() => {
     SceneController.initScene()
 })
 
-},{"./dependencies":6,"./scene":8,"./stage":9,"./video":11}],6:[function(require,module,exports){
+},{"./dependencies":6,"./scene":8,"./stage":9,"./video":12}],6:[function(require,module,exports){
 module.exports.jquery = require('jquery')
 module.exports.aframe = require('aframe')
 module.exports.htmlShader = require('aframe-html-shader')
@@ -97236,24 +97236,45 @@ const PrimitiveObjectsController = {
         `)
     },
 
-    getTapToBegin() {
-        
-    }
+    getText(text,width) {
+        return $(`
+            <a-text value="${text}" position="0 8 0" width="${width}" align="center"></a-text>
+        `)
+    },
 }
 
 module.exports = PrimitiveObjectsController
 },{"./dependencies":6}],8:[function(require,module,exports){
 const dependencies = require('./dependencies')
 const Util = require('./util')
+const Timeline = require('./timeline')
+const Stage = require('./stage')
+const PrimitiveObjects = require('./primitiveObjects')
 const $ = dependencies.jquery
 
 const SceneController = {
     initScene() {
         //will be dynamic, for now use sample video
         $('#videoPlane').attr('visible',false);
-        this.videoURL = 'https://vyden.nyc3.digitaloceanspaces.com/videos/do_u_know_da_way_(original_video).mp4'
-        $('#video').attr('src',this.videoURL)
-        
+
+        Timeline.getTimeline('<lectureID>',function(timeline){
+            //set the scene timeline
+            console.log('this from scene',this)
+            this.timeline = timeline
+            this.stage = document.getElementById('stage')
+            //set video for the scene
+            const videoURL = Timeline.getVideoFromTimeline(timeline)
+            this.videoURL = videoURL
+            $('#video').attr('src',this.videoURL)
+
+            //listen for user to start scene
+            this.userInitialized = false
+            $(document).click(function() {
+                if(!this.userInitialized) this.userStartScene()
+            }.bind(this))
+
+        }.bind(this))
+
         //set properties for desktop viewing
         if(!Util.isMobile()) {
             $('#lecStart').attr('value','Click anywhere to\n start the lecture...')
@@ -97263,27 +97284,65 @@ const SceneController = {
             $(document).css('cursor','pointer !important')
         }
 
-        //listen for user to start scene
-        this.userInitialized = false
-        $(document).click(function() {
-            if(!this.userInitialized) this.userStartScene()
-        }.bind(this))
+        
     },
 
     userStartScene() {
         this.userInitialized = true
         $('#lecStart').remove()
-        $('#videoPlane').attr('visible',true)
+        // $('#videoPlane').attr('visible',true)
         document.getElementById('video').play()
         document.getElementById('video').pause()
-        setTimeout(()=>{
-            document.getElementById('video').play()
-        },5000)
+        // setTimeout(()=>{
+        //     document.getElementById('video').play()
+        // },5000)
+        setTimeout(function() {
+            this.presentNext()
+        }.bind(this),7000);
+        //this.presentNext()
+    },
+
+    presentNext() {
+        //delta for handling time errors
+        const delta = 500;
+        //clear the stage
+        Stage.clearStage()
+        //set the current item
+        this.lastItem = this.currentItem
+        this.currentItem = this.timeline.shift()
+        this.nextItem = this.timeline[0]
+        if(!this.currentItem) {
+            $(this.stage).append(PrimitiveObjects.getText('Presentation Done',36))
+            return
+        }
+        let eventTimeout = 0
+        if(this.nextItem) {
+            eventTimeout = this.nextItem.eventTime - this.currentItem.eventTime;
+        } else {
+            eventTimeout = Timeline.getEventTimeoutForLastItem(this.currentItem)
+        } 
+        if(this.currentItem.type === 'video') {
+            $('#videoPlane').attr('visible',true)
+            setTimeout(function() {
+                document.getElementById('video').play()
+                //set timeout for next item
+                setTimeout(function() {
+                    document.getElementById('video').pause()
+                    this.presentNext()
+                }.bind(this),eventTimeout + delta)
+            }.bind(this),1000)
+        } else if(this.currentItem.type === 'quiz') {
+            console.log('start quiz')
+            $(this.stage).append(PrimitiveObjects.getText('Quizzing...',36))
+            setTimeout(function() {
+                this.presentNext()
+            }.bind(this),this.currentItem.quizTime)
+        }
     }
 }
 
 module.exports = SceneController
-},{"./dependencies":6,"./util":10}],9:[function(require,module,exports){
+},{"./dependencies":6,"./primitiveObjects":7,"./stage":9,"./timeline":10,"./util":11}],9:[function(require,module,exports){
 const dependencies = require('./dependencies')
 const PrimitiveObjects = require('./primitiveObjects')
 const $ = dependencies.jquery
@@ -97295,20 +97354,68 @@ const StageController = {
                 console.log(this)
                 StageController.component = this
             },
-
-            clear() {
-                $(this.el).empty()
-            },
-
-            presentEntity(entity) {
-                
-            }
         })
+    },
+
+    clearStage() {
+        const videoPlane = $('#videoPlane');
+        videoPlane.attr('visible','false')
+        $('#stage').empty();
+        $('#stage').append(videoPlane)
     }
 }
 
 module.exports = StageController
 },{"./dependencies":6,"./primitiveObjects":7}],10:[function(require,module,exports){
+const TimelineController = {
+    getTimeline(lectureId,callback) {
+        //retrieve timeline from Firebase
+
+        //return fake timeline for now
+        callback([{
+            id: "abc123",
+            lecture: "5678",
+            type: "video",
+            eventTime: 0,
+            resource: 'https://vyden.nyc3.digitaloceanspaces.com/videos/Sequence_01_3.mp4',
+        },
+        {
+            id: "abc123",
+            lecture: "5678",
+            type: "quiz",
+            eventTime: 10000,
+            quizTime: 3000,
+            resource: 'quizID',
+        },
+        {
+            id: "abc123",
+            lecture: "5678",
+            type: "video",
+            eventTime: 13000,
+            resource: 'https://vyden.nyc3.digitaloceanspaces.com/videos/Sequence_01_3.mp4',
+        }]) 
+    },
+
+    getVideoFromTimeline(timeline) {
+        for(let i = 0; i < timeline.length; i++) {
+            const timelineItem = timeline[i];
+            if(timelineItem.type === 'video') return timelineItem.resource
+        }
+    },
+
+    getEventTimeoutForLastItem(lastItem) {
+        if(lastItem.type === 'video') {
+            const video = document.getElementById('video')
+            return 1000 * (video.duration - video.currentTime)
+        } else if(lastItem.type === 'quiz') {
+            //will be the time from the actual quiz object
+            return lastItem.quizTime
+        }
+    }
+}
+
+module.exports = TimelineController
+},{}],11:[function(require,module,exports){
 const Utilities = {
     isMobile() {
         return (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))
@@ -97316,7 +97423,7 @@ const Utilities = {
 }
 
 module.exports = Utilities
-},{}],11:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 const dependencies = require('./dependencies')
 const PrimitiveObjects = require('./primitiveObjects')
 const $ = dependencies.jquery

@@ -9,15 +9,14 @@ const StageController = {
                 console.log(this)
                 StageController.component = this
             },
-
-            clear() {
-                $(this.el).empty()
-            },
-
-            presentEntity(entity) {
-                
-            }
         })
+    },
+
+    clearStage() {
+        const videoPlane = $('#videoPlane');
+        videoPlane.attr('visible','false')
+        $('#stage').empty();
+        $('#stage').append(videoPlane)
     }
 }
 

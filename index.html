@@ -11,7 +11,7 @@
           <a-assets>
             <img id="groundTexture" src="https://cdn.aframe.io/a-painter/images/floor.jpg" crossorigin="anonymous">
             <img id="skyTexture" src="https://cdn.aframe.io/a-painter/images/sky.jpg" crossorigin="anonymous">
-            <video id="video" src="https://vyden.nyc3.digitaloceanspaces.com/videos/Sequence%2001_2.mp4"></video>
+            <video id="video"></video>
           </a-assets>
     
           <a-entity id="mainCamera" camera look-controls position="0 10 0">
@@ -19,9 +19,9 @@
             <!-- <a-cursor id="cursor" color="yellow"></a-cursor> -->
           </a-entity>
           
-          <a-entity stage position="0 0.1 -24">
+          <a-entity stage id="stage" position="0 0.1 -24">
             <a-entity video></a-entity>
-            <a-video id="videoPlane" src="#video" width="20" height="11.25" position="0 12 8"></a-video>
+            <a-video id="videoPlane" src="#video" width="20" height="11.25" position="0 12 6"></a-video>
             <!--<a-text value="Tap anywhere to\n start scene..." position="0 5 10" align="center" width="36"></a-text>-->
           </a-entity>
     

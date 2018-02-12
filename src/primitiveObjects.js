@@ -34,9 +34,11 @@ const PrimitiveObjectsController = {
         `)
     },
 
-    getTapToBegin() {
-        
-    }
+    getText(text,width) {
+        return $(`
+            <a-text value="${text}" position="0 8 0" width="${width}" align="center"></a-text>
+        `)
+    },
 }
 
 module.exports = PrimitiveObjectsController
