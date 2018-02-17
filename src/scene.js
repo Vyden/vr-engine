@@ -22,9 +22,9 @@ const SceneController = {
 
             //listen for user to start scene
             this.userInitialized = false
-            $(document).click(function() {
+            /*$(document).click(function() {
                 if(!this.userInitialized) this.userStartScene()
-            }.bind(this))
+            }.bind(this))*/
 
         }.bind(this))
 

@@ -15,14 +15,27 @@
           </a-assets>
     
           <a-entity id="mainCamera" camera look-controls position="0 10 0">
-            <a-text id="lecStart" value="Tap anywhere to\n start lecture..." position="0 0 -1.5" align="center"></a-text>
+            <!-- <a-text id="lecStart" value="Tap anywhere to\n start lecture..." position="0 0 -1.5" align="center"></a-text> -->
             <!-- <a-cursor id="cursor" color="yellow"></a-cursor> -->
           </a-entity>
           
           <a-entity stage id="stage" position="0 0.1 -24">
             <a-entity video></a-entity>
-            <a-video id="videoPlane" src="#video" width="20" height="11.25" position="0 12 6"></a-video>
+            <a-video id="videoPlane" src="#video" width="20" height="11.25" position="0 10 6"></a-video>
             <!--<a-text value="Tap anywhere to\n start scene..." position="0 5 10" align="center" width="36"></a-text>-->
+            <a-text value="What's a computer?\na.) It depends\nb.) All of the above\nc.) None of the above\nd.) Some of the above" align="center" anchor="center" width="40" position="-1 16 0"></a-text>
+            <a-circle position="-10 6 0" rotation="0 0 0" radius="2" color="#FF5722">
+              <a-text value="A" width="50" align="center">
+            </a-circle>
+            <a-circle position="-4 6 0" rotation="0 0 0" radius="2" color="#FFC107">
+              <a-text value="B" width="50" align="center">
+            </a-circle>
+            <a-circle position="2 6 0" rotation="0 0 0" radius="2" color="#8BC34A">
+              <a-text value="C" width="50" align="center">
+            </a-circle>
+            <a-circle position="8 6 0" rotation="0 0 0" radius="2" color="#00BCD4">
+              <a-text value="D" width="50" align="center">
+            </a-circle>
           </a-entity>
     
           <!-- Background sky. -->

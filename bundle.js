@@ -97269,9 +97269,9 @@ const SceneController = {
 
             //listen for user to start scene
             this.userInitialized = false
-            $(document).click(function() {
+            /*$(document).click(function() {
                 if(!this.userInitialized) this.userStartScene()
-            }.bind(this))
+            }.bind(this))*/
 
         }.bind(this))
 
@@ -97384,14 +97384,14 @@ const TimelineController = {
             lecture: "5678",
             type: "quiz",
             eventTime: 10000,
-            quizTime: 3000,
+            quizTime: 60000,
             resource: 'quizID',
         },
         {
             id: "abc123",
             lecture: "5678",
             type: "video",
-            eventTime: 13000,
+            eventTime: 70000,
             resource: 'https://vyden.nyc3.digitaloceanspaces.com/videos/Sequence_01_3.mp4',
         }]) 
     },
