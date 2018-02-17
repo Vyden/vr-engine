@@ -2,6 +2,7 @@ const dependencies = require('./dependencies')
 const Util = require('./util')
 const Timeline = require('./timeline')
 const Stage = require('./stage')
+const Quiz = require('./quiz')
 const PrimitiveObjects = require('./primitiveObjects')
 const $ = dependencies.jquery
 

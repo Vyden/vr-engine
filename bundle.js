@@ -97194,7 +97194,7 @@ $(() => {
     SceneController.initScene()
 })
 
-},{"./dependencies":6,"./scene":8,"./stage":9,"./video":12}],6:[function(require,module,exports){
+},{"./dependencies":6,"./scene":9,"./stage":10,"./video":13}],6:[function(require,module,exports){
 module.exports.jquery = require('jquery')
 module.exports.aframe = require('aframe')
 module.exports.htmlShader = require('aframe-html-shader')
@@ -97245,10 +97245,39 @@ const PrimitiveObjectsController = {
 
 module.exports = PrimitiveObjectsController
 },{"./dependencies":6}],8:[function(require,module,exports){
+const QuizController = {
+
+    getQuiz(callback) {
+        callback({
+            question: "What's a computer?",
+            answers: {
+                0: 'It depends',
+                1: 'Some of the above',
+                2: 'None of the above',
+                3: 'All of the above'
+            }
+        })
+    },
+
+    generateText(quiz) {
+        let text = quiz.question
+        let ansLetterASCII = 97;
+        Object.keys(quiz.answers).forEach((index) => {
+            text += '\n'
+            text += String.fromCharCode(ansLetterASCII)
+            text += '.) '
+            text += quiz.answers[index]
+        })
+        return text
+    }
+
+}
+},{}],9:[function(require,module,exports){
 const dependencies = require('./dependencies')
 const Util = require('./util')
 const Timeline = require('./timeline')
 const Stage = require('./stage')
+const Quiz = require('./quiz')
 const PrimitiveObjects = require('./primitiveObjects')
 const $ = dependencies.jquery
 
@@ -97342,7 +97371,7 @@ const SceneController = {
 }
 
 module.exports = SceneController
-},{"./dependencies":6,"./primitiveObjects":7,"./stage":9,"./timeline":10,"./util":11}],9:[function(require,module,exports){
+},{"./dependencies":6,"./primitiveObjects":7,"./quiz":8,"./stage":10,"./timeline":11,"./util":12}],10:[function(require,module,exports){
 const dependencies = require('./dependencies')
 const PrimitiveObjects = require('./primitiveObjects')
 const $ = dependencies.jquery
@@ -97366,7 +97395,7 @@ const StageController = {
 }
 
 module.exports = StageController
-},{"./dependencies":6,"./primitiveObjects":7}],10:[function(require,module,exports){
+},{"./dependencies":6,"./primitiveObjects":7}],11:[function(require,module,exports){
 const TimelineController = {
     getTimeline(lectureId,callback) {
         //retrieve timeline from Firebase
@@ -97415,7 +97444,7 @@ const TimelineController = {
 }
 
 module.exports = TimelineController
-},{}],11:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 const Utilities = {
     isMobile() {
         return (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))
@@ -97423,7 +97452,7 @@ const Utilities = {
 }
 
 module.exports = Utilities
-},{}],12:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 const dependencies = require('./dependencies')
 const PrimitiveObjects = require('./primitiveObjects')
 const $ = dependencies.jquery
