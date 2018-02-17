@@ -97245,6 +97245,10 @@ const PrimitiveObjectsController = {
 
 module.exports = PrimitiveObjectsController
 },{"./dependencies":6}],8:[function(require,module,exports){
+const dependencies = require('./dependencies')
+const Util = require('./util')
+const $ = dependencies.jquery
+
 const QuizController = {
 
     getQuiz(callback) {
@@ -97269,10 +97273,32 @@ const QuizController = {
             text += quiz.answers[index]
         })
         return text
+    },
+
+    generateEntity(quiz) {
+        const numAnswers = Object.keys(quiz.answers).length
+        const leftmostPos = -6*((numAnswers/2)-1)
+        const entity = $('a-entity',{
+            id: 'quiz'
+        })
+        const entitySrc = `
+            <a-text value="${this.generateText(quiz)}" align="left" width="40" position="${leftmostPos} 16 0"></a-text>
+        `
+        let currentPos = leftmostPos
+        Object.keys(quiz.answers).forEach((index) => {
+            const ansLetter = String.fromCharCode(ansLetterASCII)
+            const ansCircle = `
+            <a-circle id="ans-${ansLetter}" position="${currentPos} 6 0" rotation="0 0 0" radius="2" color="${Util.colorForIndex(index)}">
+                <a-text value="${ansLetter}" width="50" align="center">
+            </a-circle>
+            `
+        })
     }
 
 }
-},{}],9:[function(require,module,exports){
+
+module.exports = QuizController
+},{"./dependencies":6,"./util":12}],9:[function(require,module,exports){
 const dependencies = require('./dependencies')
 const Util = require('./util')
 const Timeline = require('./timeline')
@@ -97448,7 +97474,18 @@ module.exports = TimelineController
 const Utilities = {
     isMobile() {
         return (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))
-    }    
+    },
+
+    colorForIndex(index) {
+        const colors = [
+            '#F4511E',
+            '#FFB300',
+            '#7CB342',
+            '#00ACC1',
+            '#5E35B1',
+        ]
+        return colors[index]
+    }
 }
 
 module.exports = Utilities
