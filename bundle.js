@@ -97350,16 +97350,17 @@ const SceneController = {
     userStartScene() {
         this.userInitialized = true
         $('#lecStart').remove()
-        // $('#videoPlane').attr('visible',true)
+
         document.getElementById('video').play()
         document.getElementById('video').pause()
-        // setTimeout(()=>{
-        //     document.getElementById('video').play()
-        // },5000)
-        setTimeout(function() {
+
+        if(Util.isMobile()) {
+            setTimeout(function() {
+                this.presentNext()
+            }.bind(this),10000)
+        } else {
             this.presentNext()
-        }.bind(this),7000);
-        //this.presentNext()
+        }
     },
 
     presentNext() {
@@ -97436,8 +97437,7 @@ const TimelineController = {
         //retrieve timeline from Firebase
 
         //return fake timeline for now
-        callback([
-        {
+        callback([{
             id: "abc123",
             lecture: "5678",
             type: "video",

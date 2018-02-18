@@ -3,8 +3,7 @@ const TimelineController = {
         //retrieve timeline from Firebase
 
         //return fake timeline for now
-        callback([
-        {
+        callback([{
             id: "abc123",
             lecture: "5678",
             type: "video",
