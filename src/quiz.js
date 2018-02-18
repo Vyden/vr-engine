@@ -41,7 +41,7 @@ const QuizController = {
         Object.keys(quiz.answers).forEach((index) => {
             const ansLetter = String.fromCharCode(ansLetterASCII)
             const ansCircle = `
-                <a-circle id="ans-${ansLetter}" position="${currentPos} 6 0" rotation="0 0 0" radius="2" color="${Util.colorForIndex(index)}">
+                <a-circle id="ans-${ansLetter}" position="${currentPos} 6 0" rotation="0 0 0" radius="2" color="${Util.colorForIndex(index)}" cursor-listener>
                     <a-text value="${ansLetter}" width="50" align="center">
                 </a-circle>
             `
@@ -56,3 +56,15 @@ const QuizController = {
 }
 
 module.exports = QuizController
+
+AFRAME.registerComponent('cursor-listener', {
+    init: function () {
+      var lastIndex = -1;
+      var COLORS = ['red', 'green', 'blue'];
+      this.el.addEventListener('mouseenter', function (evt) {
+        lastIndex = (lastIndex + 1) % COLORS.length;
+        this.setAttribute('material', 'color', COLORS[lastIndex]);
+        console.log('I was clicked at: ', evt.detail.intersection.point);
+      });
+    }
+  });

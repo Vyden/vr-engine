@@ -39,6 +39,15 @@ const PrimitiveObjectsController = {
             <a-text value="${text}" position="0 8 0" width="${width}" align="center"></a-text>
         `)
     },
+
+    getCursor() {
+        return $(`
+            <a-entity cursor="fuse: true; fuseTimeout: 500"
+            position="0 0 -1"
+            geometry="primitive: ring; radiusInner: 0.02; radiusOuter: 0.03"
+            material="color: #B3E5FC; shader: flat">
+        `)
+    }
 }
 
 module.exports = PrimitiveObjectsController

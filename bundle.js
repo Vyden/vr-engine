@@ -1,4 +1,96 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+/* global AFRAME */
+var styleParser = AFRAME.utils.styleParser;
+
+if (typeof AFRAME === 'undefined') {
+  throw new Error('Component attempted to register before AFRAME was available.');
+}
+
+AFRAME.registerComponent('event-set', {
+  schema: {
+    default: '',
+    parse: function (value) {
+      var convertedObj;
+      var hyphened;
+      var key;
+      var obj;
+      obj = styleParser.parse(value);
+      // Convert camelCase keys from styleParser to hyphen.
+      convertedObj = {};
+      for (key in obj) {
+        hyphened = key.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
+        convertedObj[hyphened] = obj[key];
+      }
+      return convertedObj;
+    }
+  },
+
+  multiple: true,
+
+  init: function () {
+    this.eventHandler = null;
+    this.eventName = null;
+  },
+
+  update: function (oldData) {
+    this.removeEventListener();
+    this.updateEventListener();
+    this.addEventListener();
+  },
+
+  remove: function () {
+    this.removeEventListener();
+  },
+
+  pause: function () {
+    this.removeEventListener();
+  },
+
+  play: function () {
+    this.addEventListener();
+  },
+
+  /**
+   * Update source-of-truth event listener registry.
+   * Does not actually attach event listeners yet.
+   */
+  updateEventListener: function () {
+    var data = this.data;
+    var el = this.el;
+    var event;
+    var target;
+    var targetEl;
+
+    // Set event listener using `_event`.
+    event = data._event || this.id;
+    target = data._target;
+    delete data._event;
+    delete data._target;
+
+    // Decide the target to `setAttribute` on.
+    targetEl = target ? el.sceneEl.querySelector(target) : el;
+
+    this.eventName = event;
+    this.eventHandler = function handler () {
+      var propName;
+      // Set attributes.
+      for (propName in data) {
+        AFRAME.utils.entity.setComponentProperty.call(this, targetEl, propName,
+                                                      data[propName]);
+      }
+    };
+  },
+
+  addEventListener: function () {
+    this.el.addEventListener(this.eventName, this.eventHandler);
+  },
+
+  removeEventListener: function () {
+    this.el.removeEventListener(this.eventName, this.eventHandler);
+  }
+});
+
+},{}],2:[function(require,module,exports){
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -4180,9 +4272,950 @@
 
 /***/ })
 /******/ ]);
-},{}],2:[function(require,module,exports){
-!function(t){function e(a){if(i[a])return i[a].exports;var s=i[a]={exports:{},id:a,loaded:!1};return t[a].call(s.exports,s,s.exports,e),s.loaded=!0,s.exports}var i={};return e.m=t,e.c=i,e.p="",e(0)}([function(t,e){if("undefined"==typeof AFRAME)throw new Error("Component attempted to register before AFRAME was available.");var i="Double-click outside player to hide or show it.",a="Look+click on play or bar. Space bar and arrows also work.";AFRAME.registerComponent("video-controls",{schema:{src:{type:"string"},size:{type:"number","default":1},distance:{type:"number","default":2},backgroundColor:{"default":"black"},barColor:{"default":"red"},textColor:{"default":"yellow"},infoTextBottom:{"default":i},infoTextTop:{"default":a},infoTextFont:{"default":"35px Helvetica Neue"},statusTextFont:{"default":"30px Helvetica Neue"},timeTextFont:{"default":"70px Helvetica Neue"}},position_time_from_steps:function(){var t=this.current_step/this.bar_steps;this.video_el.readyState>0&&(this.video_el.currentTime=t*this.video_el.duration)},position_control_from_camera:function(){var t=this,e=t.el.sceneEl.camera;if(e){var i=e.el.getAttribute("rotation"),a=i.y;t.y_position=e.position.y+1.6,t.x_position=-t.data.distance*Math.sin(a*Math.PI/180),t.z_position=-t.data.distance*Math.cos(a*Math.PI/180),t.el.setAttribute("position",[t.x_position,t.y_position,t.z_position].join(" ")),this.el.object3D.lookAt(new THREE.Vector3(e.position.x,e.position.y+1.6,e.position.z))}},init:function(){var t=this;this.bar_steps=10,this.current_step=0,this.el.setAttribute("visible",!0),this.video_selector=this.data.src,this.video_el=document.querySelector(this.video_selector),t.play_image_src=document.getElementById("video-play-image")?"#video-play-image":"https://res.cloudinary.com/dxbh0pppv/image/upload/c_scale,h_512,q_10/v1471016296/play_wvmogo.png",t.pause_image_src=document.getElementById("video-pause-image")?"#video-pause-image":"https://res.cloudinary.com/dxbh0pppv/image/upload/c_scale,h_512,q_25/v1471016296/pause_ndega5.png",this.play_image=document.createElement("a-image"),this.video_el.paused?this.play_image.setAttribute("src",t.play_image_src):this.play_image.setAttribute("src",t.pause_image_src),this.video_el.addEventListener("ended",function(){t.play_image.setAttribute("src",t.play_image_src)}),this.video_el.addEventListener("pause",function(){t.play_image.setAttribute("src",t.play_image_src)}),this.video_el.addEventListener("playing",function(){t.play_image.setAttribute("src",t.pause_image_src)}),this.bar_canvas=document.createElement("canvas"),this.bar_canvas.setAttribute("id","video_player_canvas"),this.bar_canvas.width=1024,this.bar_canvas.height=256,this.bar_canvas.style.display="none",this.context=this.bar_canvas.getContext("2d"),this.texture=new THREE.Texture(this.bar_canvas),this.play_image.addEventListener("click",function(e){t.video_el.paused?(this.setAttribute("src",t.pause_image_src),t.video_el.play()):(this.setAttribute("src",t.play_image_src),t.video_el.pause()),e.stopPropagation(),e.preventDefault()}),window.addEventListener("keyup",function(e){switch(e.keyCode){case 32:t.play_image.dispatchEvent(new Event("click"));break;case 37:t.current_step=0,t.position_time_from_steps();break;case 39:t.current_step=t.bar_steps,t.position_time_from_steps();break;case 38:t.current_step=t.current_step<t.bar_steps?t.current_step+1:t.current_step,t.position_time_from_steps();break;case 40:t.current_step=t.current_step>0?t.current_step-1:t.current_step,t.position_time_from_steps()}},!1),this.bar=document.createElement("a-plane"),this.bar.setAttribute("color","#000"),this.bar.addEventListener("click",function(e){var i=document.querySelector("a-cursor").components.raycaster.raycaster.intersectObject(this.object3D,!0)[0].point,a=this.object3D.worldToLocal(i).x,s=a/t.data.size+.5;t.current_step=Math.round(s*t.bar_steps),t.video_el.readyState>0&&(t.video_el.currentTime=s*t.video_el.duration),e.stopPropagation(),e.preventDefault()}),this.el.appendChild(this.bar_canvas),this.el.appendChild(this.play_image),this.el.appendChild(this.bar),this.el.sceneEl.addEventListener("loaded",function(){t.position_control_from_camera(),this.addEventListener("dblclick",function(){var e=document.querySelector("a-cursor").components.raycaster.raycaster;0==e.intersectObject(t.el.object3D,!0).length&&(t.el.getAttribute("visible")?t.el.setAttribute("visible",!1):(t.el.setAttribute("visible",!0),t.position_control_from_camera()))})})},update:function(t){this.position_control_from_camera(),this.bar.setAttribute("height",this.data.size/4),this.bar.setAttribute("width",this.data.size),this.bar.setAttribute("position","0.0 0.0 0"),this.play_image.setAttribute("height",this.data.size/4),this.play_image.setAttribute("width",this.data.size/4),this.play_image.setAttribute("position",-this.data.size/2*1.4+" 0 0")},remove:function(){},tick:function(t){if("undefined"==typeof this.last_time||t-this.last_time>250){if(this.video_el.readyState>0){var e=Math.floor(this.video_el.currentTime/60),i=Math.floor(this.video_el.currentTime%60);e=e<10?"0"+e:e,i=i<10?"0"+i:i;var a=Math.floor(this.video_el.duration/60),s=Math.floor(this.video_el.duration%60);a=a<10?"0"+a:a,s=s<10?"0"+s:s;var r=e+":"+i+" / "+a+":"+s,o=this.bar_canvas.width/this.video_el.duration;if(this.video_el.buffered.length>0){this.current_step=Math.round(this.video_el.currentTime/this.video_el.duration*this.bar_steps);var n=this.context;if(n.fillStyle=this.data.backgroundColor,n.fillRect(0,0,this.bar_canvas.width,this.bar_canvas.height),n.font=this.data.timeTextFont,n.fillStyle="white",n.textAlign="center",n.fillText(r,this.bar_canvas.width/2,.65*this.bar_canvas.height),this.video_el.seeking)n.font=this.data.statusTextFont,n.fillStyle=this.data.textColor,n.textAlign="end",n.fillText("Seeking",.95*this.bar_canvas.width,.6*this.bar_canvas.height);else{var l=this.video_el.buffered.end(this.video_el.buffered.length-1)/this.video_el.duration*100;n.font=this.data.statusTextFont,n.fillStyle=this.data.textColor,n.textAlign="end",n.fillText(l.toFixed(0)+"% loaded",.95*this.bar_canvas.width,.6*this.bar_canvas.height)}n.fillStyle=this.data.textColor,n.font=this.data.infoTextFont,n.textAlign="center",n.fillText(this.data.infoTextTop,this.bar_canvas.width/2,.8*this.bar_canvas.height),n.fillText(this.data.infoTextBottom,this.bar_canvas.width/2,.95*this.bar_canvas.height);for(var c=0;c<this.video_el.buffered.length;c++){var d=this.video_el.buffered.start(c)*o,h=this.video_el.buffered.end(c)*o,_=h-d;n.fillStyle="grey",n.fillRect(d,0,_,this.bar_canvas.height/3)}n.fillStyle=this.data.barColor,n.fillRect(0,0,this.video_el.currentTime/this.video_el.duration*this.bar_canvas.width,this.bar_canvas.height/3)}this.bar.object3D.children.length>0&&(null===this.bar.object3D.children[0].material.map&&(this.bar.object3D.children[0].material=new THREE.MeshBasicMaterial,this.bar.object3D.children[0].material.map=this.texture),this.texture.needsUpdate=!0)}this.last_time=t}},pause:function(){},play:function(){}})}]);
 },{}],3:[function(require,module,exports){
+/******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId])
+/******/ 			return installedModules[moduleId].exports;
+
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			exports: {},
+/******/ 			id: moduleId,
+/******/ 			loaded: false
+/******/ 		};
+
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+
+/******/ 		// Flag the module as loaded
+/******/ 		module.loaded = true;
+
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+
+
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "";
+
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(0);
+/******/ })
+/************************************************************************/
+/******/ ([
+/* 0 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _lodash = __webpack_require__(1);
+
+	var _lodash2 = _interopRequireDefault(_lodash);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	if (typeof AFRAME === 'undefined') {
+		throw 'mouse-cursor Component attempted to register before AFRAME was available.';
+	}
+
+	var IS_VR_AVAILABLE = AFRAME.utils.device.isMobile() || window.hasNonPolyfillWebVRSupport;
+
+	/**
+	 * Mouse Cursor Component for A-Frame.
+	 */
+	AFRAME.registerComponent('mouse-cursor', {
+		schema: {},
+
+		/**
+	  * Called once when component is attached. Generally for initial setup.
+	  * @protected
+	  */
+		init: function init() {
+			this._raycaster = new THREE.Raycaster();
+			this._mouse = new THREE.Vector2();
+			this._isMobile = this.el.sceneEl.isMobile;
+			this._isStereo = false;
+			this._active = false;
+			this._isDown = false;
+			this._intersectedEl = null;
+			this._attachEventListeners();
+			this._canvasSize = false;
+			/* bind functions */
+			this.__getCanvasPos = this._getCanvasPos.bind(this);
+			this.__getCanvasPos = this._getCanvasPos.bind(this);
+			this.__onEnterVR = this._onEnterVR.bind(this);
+			this.__onExitVR = this._onExitVR.bind(this);
+			this.__onDown = this._onDown.bind(this);
+			this.__onClick = this._onClick.bind(this);
+			this.__onMouseMove = this._onMouseMove.bind(this);
+			this.__onRelease = this._onRelease.bind(this);
+			this.__onTouchMove = this._onTouchMove.bind(this);
+			this.__onComponentChanged = this._onComponentChanged.bind(this);
+		},
+
+
+		/**
+	  * Called when component is attached and when component data changes.
+	  * Generally modifies the entity based on the data.
+	  * @protected
+	  */
+		update: function update(oldData) {},
+
+
+		/**
+	  * Called when a component is removed (e.g., via removeAttribute).
+	  * Generally undoes all modifications to the entity.
+	  * @protected
+	  */
+		remove: function remove() {
+			this._removeEventListeners();
+			this._raycaster = null;
+		},
+
+
+		/**
+	  * Called on each scene tick.
+	  * @protected
+	  */
+		// tick (t) { },
+
+		/**
+	  * Called when entity pauses.
+	  * Use to stop or remove any dynamic or background behavior such as events.
+	  * @protected
+	  */
+		pause: function pause() {
+			this._active = false;
+		},
+
+
+		/**
+	  * Called when entity resumes.
+	  * Use to continue or add any dynamic or background behavior such as events.
+	  * @protected
+	  */
+		play: function play() {
+			this._active = true;
+		},
+
+
+		/*==============================
+	  =            events            =
+	  ==============================*/
+
+		/**
+	  * @private
+	  */
+		_attachEventListeners: function _attachEventListeners() {
+			var el = this.el;
+			var sceneEl = el.sceneEl;
+			var canvas = sceneEl.canvas;
+			/* if canvas doesn't exist, listen for canvas to load. */
+
+			if (!canvas) {
+				el.sceneEl.addEventListener('render-target-loaded', this._attachEventListeners.bind(this));
+				return;
+			}
+
+			window.addEventListener('resize', this.__getCanvasPos);
+			document.addEventListener('scroll', this.__getCanvasPos);
+			/* update _canvas in case scene is embedded */
+			this._getCanvasPos();
+
+			/* scene */
+			sceneEl.addEventListener('enter-vr', this.__onEnterVR);
+			sceneEl.addEventListener('exit-vr', this.__onExitVR);
+
+			/* Mouse events */
+			canvas.addEventListener('mousedown', this.__onDown);
+			canvas.addEventListener('mousemove', this.__onMouseMove);
+			canvas.addEventListener('mouseup', this.__onRelease);
+			canvas.addEventListener('mouseout', this.__onRelease);
+
+			/* Touch events */
+			canvas.addEventListener('touchstart', this.__onDown);
+			canvas.addEventListener('touchmove', this.__onTouchMove);
+			canvas.addEventListener('touchend', this.__onRelease);
+
+			/* Click event */
+			canvas.addEventListener('click', this.__onClick);
+
+			/* Element component change */
+			el.addEventListener('componentchanged', this.__onComponentChanged);
+		},
+
+
+		/**
+	  * @private
+	  */
+		_removeEventListeners: function _removeEventListeners() {
+			var el = this.el;
+			var sceneEl = el.sceneEl;
+			var canvas = sceneEl.canvas;
+
+			if (!canvas) {
+				return;
+			}
+
+			window.removeEventListener('resize', this.__getCanvasPos);
+			document.removeEventListener('scroll', this.__getCanvasPos);
+
+			/* scene */
+			sceneEl.removeEventListener('enter-vr', this.__onEnterVR);
+			sceneEl.removeEventListener('exit-vr', this.__onExitVR);
+
+			/* Mouse events */
+			canvas.removeEventListener('mousedown', this.__onDown);
+			canvas.removeEventListener('mousemove', this.__onMouseMove);
+			canvas.removeEventListener('mouseup', this.__onRelease);
+			canvas.removeEventListener('mouseout', this.__onRelease);
+
+			/* Touch events */
+			canvas.removeEventListener('touchstart', this.__onDown);
+			canvas.removeEventListener('touchmove', this.__onTouchMove);
+			canvas.removeEventListener('touchend', this.__onRelease);
+
+			/* Click event */
+			canvas.removeEventListener('click', this.__onClick);
+
+			/* Element component change */
+			el.removeEventListener('componentchanged', this.__onComponentChanged);
+		},
+
+
+		/**
+	  * Check if the mouse cursor is active
+	  * @private
+	  */
+		_isActive: function _isActive() {
+			return !!(this._active || this._raycaster);
+		},
+
+
+		/**
+	  * @private
+	  */
+		_onDown: function _onDown(evt) {
+			if (!this._isActive()) {
+				return;
+			}
+
+			this._isDown = true;
+
+			this._updateMouse(evt);
+			this._updateIntersectObject();
+
+			if (!this._isMobile) {
+				this._setInitMousePosition(evt);
+			}
+			if (this._intersectedEl) {
+				this._emit('mousedown');
+			}
+		},
+
+
+		/**
+	  * @private
+	  */
+		_onClick: function _onClick(evt) {
+			if (!this._isActive()) {
+				return;
+			}
+
+			this._updateMouse(evt);
+			this._updateIntersectObject();
+
+			if (this._intersectedEl) {
+				this._emit('click');
+			}
+		},
+
+
+		/**
+	  * @private
+	  */
+		_onRelease: function _onRelease() {
+			if (!this._isActive()) {
+				return;
+			}
+
+			/* check if mouse position has updated */
+			if (this._defMousePosition) {
+				var defX = Math.abs(this._initMousePosition.x - this._defMousePosition.x);
+				var defY = Math.abs(this._initMousePosition.y - this._defMousePosition.y);
+				var def = Math.max(defX, defY);
+				if (def > 0.04) {
+					/* mouse has moved too much to recognize as click. */
+					this._isDown = false;
+				}
+			}
+
+			if (this._isDown && this._intersectedEl) {
+				this._emit('mouseup');
+			}
+			this._isDown = false;
+			this._resetMousePosition();
+		},
+
+
+		/**
+	  * @private
+	  */
+		_onMouseMove: function _onMouseMove(evt) {
+			if (!this._isActive()) {
+				return;
+			}
+
+			this._updateMouse(evt);
+			this._updateIntersectObject();
+
+			if (this._isDown) {
+				this._setMousePosition(evt);
+			}
+		},
+
+
+		/**
+	  * @private
+	  */
+		_onTouchMove: function _onTouchMove(evt) {
+			if (!this._isActive()) {
+				return;
+			}
+
+			this._isDown = false;
+		},
+
+
+		/**
+	  * @private
+	  */
+		_onEnterVR: function _onEnterVR() {
+			if (IS_VR_AVAILABLE) {
+				this._isStereo = true;
+			}
+			this._getCanvasPos();
+		},
+
+
+		/**
+	  * @private
+	  */
+		_onExitVR: function _onExitVR() {
+			this._isStereo = false;
+			this._getCanvasPos();
+		},
+
+
+		/**
+	  * @private
+	  */
+		_onComponentChanged: function _onComponentChanged(evt) {
+			if (evt.detail.name === 'position') {
+				this._updateIntersectObject();
+			}
+		},
+
+
+		/*=============================
+	  =            mouse            =
+	  =============================*/
+
+		/**
+	  * Get mouse position from size of canvas element
+	  * @private
+	  */
+		_getPosition: function _getPosition(evt) {
+			var _canvasSize = this._canvasSize,
+			    w = _canvasSize.width,
+			    h = _canvasSize.height,
+			    offsetW = _canvasSize.left,
+			    offsetH = _canvasSize.top;
+
+
+			var cx = void 0,
+			    cy = void 0;
+			if (this._isMobile) {
+				var touches = evt.touches;
+
+				if (!touches || touches.length !== 1) {
+					return;
+				}
+				var touch = touches[0];
+				cx = touch.clientX;
+				cy = touch.clientY;
+			} else {
+				cx = evt.clientX;
+				cy = evt.clientY;
+			}
+
+			/* account for the offset if scene is embedded */
+			cx = cx - offsetW;
+			cy = cy - offsetH;
+
+			if (this._isStereo) {
+				cx = cx % (w / 2) * 2;
+			}
+
+			var x = cx / w * 2 - 1;
+			var y = -(cy / h) * 2 + 1;
+
+			return { x: x, y: y };
+		},
+
+
+		/**
+	  * Update mouse
+	  * @private
+	  */
+		_updateMouse: function _updateMouse(evt) {
+			var pos = this._getPosition(evt);
+			if (!pos) {
+				return;
+			}
+
+			this._mouse.x = pos.x;
+			this._mouse.y = pos.y;
+		},
+
+
+		/**
+	  * Update mouse position
+	  * @private
+	  */
+		_setMousePosition: function _setMousePosition(evt) {
+			this._defMousePosition = this._getPosition(evt);
+		},
+
+
+		/**
+	  * Update initial mouse position
+	  * @private
+	  */
+		_setInitMousePosition: function _setInitMousePosition(evt) {
+			this._initMousePosition = this._getPosition(evt);
+		},
+		_resetMousePosition: function _resetMousePosition() {
+			this._initMousePosition = this._defMousePosition = null;
+		},
+
+
+		/*======================================
+	  =            scene children            =
+	  ======================================*/
+
+		/**
+	  * @private
+	  */
+		_getCanvasPos: function _getCanvasPos() {
+			this._canvasSize = this.el.sceneEl.canvas.getBoundingClientRect(); // update _canvas in case scene is embedded
+		},
+
+
+		/**
+	  * Get non group object3D
+	  * @private
+	  */
+		_getChildren: function _getChildren(object3D) {
+			var _this = this;
+
+			return object3D.children.map(function (obj) {
+				return obj.type === 'Group' ? _this._getChildren(obj) : obj;
+			});
+		},
+
+
+		/**
+	  * Get all non group object3D
+	  * @private
+	  */
+		_getAllChildren: function _getAllChildren() {
+			var children = this._getChildren(this.el.sceneEl.object3D);
+			return (0, _lodash2.default)(children);
+		},
+
+
+		/*====================================
+	  =            intersection            =
+	  ====================================*/
+
+		/**
+	  * Update intersect element with cursor
+	  * @private
+	  */
+		_updateIntersectObject: function _updateIntersectObject() {
+			var _raycaster = this._raycaster,
+			    el = this.el,
+			    _mouse = this._mouse;
+			var scene = el.sceneEl.object3D;
+
+			var camera = this.el.getObject3D('camera');
+			this._getAllChildren();
+			/* find intersections */
+			// _raycaster.setFromCamera(_mouse, camera) /* this somehow gets error so did the below */
+			_raycaster.ray.origin.setFromMatrixPosition(camera.matrixWorld);
+			_raycaster.ray.direction.set(_mouse.x, _mouse.y, 0.5).unproject(camera).sub(_raycaster.ray.origin).normalize();
+
+			/* get objects intersected between mouse and camera */
+			var children = this._getAllChildren();
+			var intersects = _raycaster.intersectObjects(children);
+
+			if (intersects.length > 0) {
+				/* get the closest three obj */
+				var obj = void 0;
+				intersects.every(function (item) {
+					if (item.object.parent.visible === true) {
+						obj = item.object;
+						return false;
+					} else {
+						return true;
+					}
+				});
+				if (!obj) {
+					this._clearIntersectObject();
+					return;
+				}
+				/* get the entity */
+				var _el = obj.parent.el;
+				/* only updates if the object is not the activated object */
+
+				if (this._intersectedEl === _el) {
+					return;
+				}
+				this._clearIntersectObject();
+				/* apply new object as intersected */
+				this._setIntersectObject(_el);
+			} else {
+				this._clearIntersectObject();
+			}
+		},
+
+
+		/**
+	  * Set intersect element
+	  * @private
+	  * @param {AEntity} el `a-entity` element
+	  */
+		_setIntersectObject: function _setIntersectObject(el) {
+			this._intersectedEl = el;
+			if (this._isMobile) {
+				return;
+			}
+			el.addState('hovered');
+			el.emit('mouseenter');
+			this.el.addState('hovering');
+		},
+
+
+		/**
+	  * Clear intersect element
+	  * @private
+	  */
+		_clearIntersectObject: function _clearIntersectObject() {
+			var el = this._intersectedEl;
+
+			if (el && !this._isMobile) {
+				el.removeState('hovered');
+				el.emit('mouseleave');
+				this.el.removeState('hovering');
+			}
+
+			this._intersectedEl = null;
+		},
+
+
+		/*===============================
+	  =            emitter            =
+	  ===============================*/
+
+		/**
+	  * @private
+	  */
+		_emit: function _emit(evt) {
+			var _intersectedEl = this._intersectedEl;
+
+			this.el.emit(evt, { target: _intersectedEl });
+			if (_intersectedEl) {
+				_intersectedEl.emit(evt);
+			}
+		}
+	});
+
+/***/ }),
+/* 1 */
+/***/ (function(module, exports) {
+
+	/* WEBPACK VAR INJECTION */(function(global) {/**
+	 * lodash (Custom Build) <https://lodash.com/>
+	 * Build: `lodash modularize exports="npm" -o ./`
+	 * Copyright jQuery Foundation and other contributors <https://jquery.org/>
+	 * Released under MIT license <https://lodash.com/license>
+	 * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
+	 * Copyright Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
+	 */
+
+	/** Used as references for various `Number` constants. */
+	var INFINITY = 1 / 0,
+	    MAX_SAFE_INTEGER = 9007199254740991;
+
+	/** `Object#toString` result references. */
+	var argsTag = '[object Arguments]',
+	    funcTag = '[object Function]',
+	    genTag = '[object GeneratorFunction]';
+
+	/** Detect free variable `global` from Node.js. */
+	var freeGlobal = typeof global == 'object' && global && global.Object === Object && global;
+
+	/** Detect free variable `self`. */
+	var freeSelf = typeof self == 'object' && self && self.Object === Object && self;
+
+	/** Used as a reference to the global object. */
+	var root = freeGlobal || freeSelf || Function('return this')();
+
+	/**
+	 * Appends the elements of `values` to `array`.
+	 *
+	 * @private
+	 * @param {Array} array The array to modify.
+	 * @param {Array} values The values to append.
+	 * @returns {Array} Returns `array`.
+	 */
+	function arrayPush(array, values) {
+	  var index = -1,
+	      length = values.length,
+	      offset = array.length;
+
+	  while (++index < length) {
+	    array[offset + index] = values[index];
+	  }
+	  return array;
+	}
+
+	/** Used for built-in method references. */
+	var objectProto = Object.prototype;
+
+	/** Used to check objects for own properties. */
+	var hasOwnProperty = objectProto.hasOwnProperty;
+
+	/**
+	 * Used to resolve the
+	 * [`toStringTag`](http://ecma-international.org/ecma-262/7.0/#sec-object.prototype.tostring)
+	 * of values.
+	 */
+	var objectToString = objectProto.toString;
+
+	/** Built-in value references. */
+	var Symbol = root.Symbol,
+	    propertyIsEnumerable = objectProto.propertyIsEnumerable,
+	    spreadableSymbol = Symbol ? Symbol.isConcatSpreadable : undefined;
+
+	/**
+	 * The base implementation of `_.flatten` with support for restricting flattening.
+	 *
+	 * @private
+	 * @param {Array} array The array to flatten.
+	 * @param {number} depth The maximum recursion depth.
+	 * @param {boolean} [predicate=isFlattenable] The function invoked per iteration.
+	 * @param {boolean} [isStrict] Restrict to values that pass `predicate` checks.
+	 * @param {Array} [result=[]] The initial result value.
+	 * @returns {Array} Returns the new flattened array.
+	 */
+	function baseFlatten(array, depth, predicate, isStrict, result) {
+	  var index = -1,
+	      length = array.length;
+
+	  predicate || (predicate = isFlattenable);
+	  result || (result = []);
+
+	  while (++index < length) {
+	    var value = array[index];
+	    if (depth > 0 && predicate(value)) {
+	      if (depth > 1) {
+	        // Recursively flatten arrays (susceptible to call stack limits).
+	        baseFlatten(value, depth - 1, predicate, isStrict, result);
+	      } else {
+	        arrayPush(result, value);
+	      }
+	    } else if (!isStrict) {
+	      result[result.length] = value;
+	    }
+	  }
+	  return result;
+	}
+
+	/**
+	 * Checks if `value` is a flattenable `arguments` object or array.
+	 *
+	 * @private
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is flattenable, else `false`.
+	 */
+	function isFlattenable(value) {
+	  return isArray(value) || isArguments(value) ||
+	    !!(spreadableSymbol && value && value[spreadableSymbol]);
+	}
+
+	/**
+	 * Recursively flattens `array`.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @since 3.0.0
+	 * @category Array
+	 * @param {Array} array The array to flatten.
+	 * @returns {Array} Returns the new flattened array.
+	 * @example
+	 *
+	 * _.flattenDeep([1, [2, [3, [4]], 5]]);
+	 * // => [1, 2, 3, 4, 5]
+	 */
+	function flattenDeep(array) {
+	  var length = array ? array.length : 0;
+	  return length ? baseFlatten(array, INFINITY) : [];
+	}
+
+	/**
+	 * Checks if `value` is likely an `arguments` object.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @since 0.1.0
+	 * @category Lang
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is an `arguments` object,
+	 *  else `false`.
+	 * @example
+	 *
+	 * _.isArguments(function() { return arguments; }());
+	 * // => true
+	 *
+	 * _.isArguments([1, 2, 3]);
+	 * // => false
+	 */
+	function isArguments(value) {
+	  // Safari 8.1 makes `arguments.callee` enumerable in strict mode.
+	  return isArrayLikeObject(value) && hasOwnProperty.call(value, 'callee') &&
+	    (!propertyIsEnumerable.call(value, 'callee') || objectToString.call(value) == argsTag);
+	}
+
+	/**
+	 * Checks if `value` is classified as an `Array` object.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @since 0.1.0
+	 * @category Lang
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is an array, else `false`.
+	 * @example
+	 *
+	 * _.isArray([1, 2, 3]);
+	 * // => true
+	 *
+	 * _.isArray(document.body.children);
+	 * // => false
+	 *
+	 * _.isArray('abc');
+	 * // => false
+	 *
+	 * _.isArray(_.noop);
+	 * // => false
+	 */
+	var isArray = Array.isArray;
+
+	/**
+	 * Checks if `value` is array-like. A value is considered array-like if it's
+	 * not a function and has a `value.length` that's an integer greater than or
+	 * equal to `0` and less than or equal to `Number.MAX_SAFE_INTEGER`.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @since 4.0.0
+	 * @category Lang
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is array-like, else `false`.
+	 * @example
+	 *
+	 * _.isArrayLike([1, 2, 3]);
+	 * // => true
+	 *
+	 * _.isArrayLike(document.body.children);
+	 * // => true
+	 *
+	 * _.isArrayLike('abc');
+	 * // => true
+	 *
+	 * _.isArrayLike(_.noop);
+	 * // => false
+	 */
+	function isArrayLike(value) {
+	  return value != null && isLength(value.length) && !isFunction(value);
+	}
+
+	/**
+	 * This method is like `_.isArrayLike` except that it also checks if `value`
+	 * is an object.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @since 4.0.0
+	 * @category Lang
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is an array-like object,
+	 *  else `false`.
+	 * @example
+	 *
+	 * _.isArrayLikeObject([1, 2, 3]);
+	 * // => true
+	 *
+	 * _.isArrayLikeObject(document.body.children);
+	 * // => true
+	 *
+	 * _.isArrayLikeObject('abc');
+	 * // => false
+	 *
+	 * _.isArrayLikeObject(_.noop);
+	 * // => false
+	 */
+	function isArrayLikeObject(value) {
+	  return isObjectLike(value) && isArrayLike(value);
+	}
+
+	/**
+	 * Checks if `value` is classified as a `Function` object.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @since 0.1.0
+	 * @category Lang
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is a function, else `false`.
+	 * @example
+	 *
+	 * _.isFunction(_);
+	 * // => true
+	 *
+	 * _.isFunction(/abc/);
+	 * // => false
+	 */
+	function isFunction(value) {
+	  // The use of `Object#toString` avoids issues with the `typeof` operator
+	  // in Safari 8-9 which returns 'object' for typed array and other constructors.
+	  var tag = isObject(value) ? objectToString.call(value) : '';
+	  return tag == funcTag || tag == genTag;
+	}
+
+	/**
+	 * Checks if `value` is a valid array-like length.
+	 *
+	 * **Note:** This method is loosely based on
+	 * [`ToLength`](http://ecma-international.org/ecma-262/7.0/#sec-tolength).
+	 *
+	 * @static
+	 * @memberOf _
+	 * @since 4.0.0
+	 * @category Lang
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is a valid length, else `false`.
+	 * @example
+	 *
+	 * _.isLength(3);
+	 * // => true
+	 *
+	 * _.isLength(Number.MIN_VALUE);
+	 * // => false
+	 *
+	 * _.isLength(Infinity);
+	 * // => false
+	 *
+	 * _.isLength('3');
+	 * // => false
+	 */
+	function isLength(value) {
+	  return typeof value == 'number' &&
+	    value > -1 && value % 1 == 0 && value <= MAX_SAFE_INTEGER;
+	}
+
+	/**
+	 * Checks if `value` is the
+	 * [language type](http://www.ecma-international.org/ecma-262/7.0/#sec-ecmascript-language-types)
+	 * of `Object`. (e.g. arrays, functions, objects, regexes, `new Number(0)`, and `new String('')`)
+	 *
+	 * @static
+	 * @memberOf _
+	 * @since 0.1.0
+	 * @category Lang
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is an object, else `false`.
+	 * @example
+	 *
+	 * _.isObject({});
+	 * // => true
+	 *
+	 * _.isObject([1, 2, 3]);
+	 * // => true
+	 *
+	 * _.isObject(_.noop);
+	 * // => true
+	 *
+	 * _.isObject(null);
+	 * // => false
+	 */
+	function isObject(value) {
+	  var type = typeof value;
+	  return !!value && (type == 'object' || type == 'function');
+	}
+
+	/**
+	 * Checks if `value` is object-like. A value is object-like if it's not `null`
+	 * and has a `typeof` result of "object".
+	 *
+	 * @static
+	 * @memberOf _
+	 * @since 4.0.0
+	 * @category Lang
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is object-like, else `false`.
+	 * @example
+	 *
+	 * _.isObjectLike({});
+	 * // => true
+	 *
+	 * _.isObjectLike([1, 2, 3]);
+	 * // => true
+	 *
+	 * _.isObjectLike(_.noop);
+	 * // => false
+	 *
+	 * _.isObjectLike(null);
+	 * // => false
+	 */
+	function isObjectLike(value) {
+	  return !!value && typeof value == 'object';
+	}
+
+	module.exports = flattenDeep;
+
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
+/***/ })
+/******/ ]);
+},{}],4:[function(require,module,exports){
+!function(t){function e(a){if(i[a])return i[a].exports;var s=i[a]={exports:{},id:a,loaded:!1};return t[a].call(s.exports,s,s.exports,e),s.loaded=!0,s.exports}var i={};return e.m=t,e.c=i,e.p="",e(0)}([function(t,e){if("undefined"==typeof AFRAME)throw new Error("Component attempted to register before AFRAME was available.");var i="Double-click outside player to hide or show it.",a="Look+click on play or bar. Space bar and arrows also work.";AFRAME.registerComponent("video-controls",{schema:{src:{type:"string"},size:{type:"number","default":1},distance:{type:"number","default":2},backgroundColor:{"default":"black"},barColor:{"default":"red"},textColor:{"default":"yellow"},infoTextBottom:{"default":i},infoTextTop:{"default":a},infoTextFont:{"default":"35px Helvetica Neue"},statusTextFont:{"default":"30px Helvetica Neue"},timeTextFont:{"default":"70px Helvetica Neue"}},position_time_from_steps:function(){var t=this.current_step/this.bar_steps;this.video_el.readyState>0&&(this.video_el.currentTime=t*this.video_el.duration)},position_control_from_camera:function(){var t=this,e=t.el.sceneEl.camera;if(e){var i=e.el.getAttribute("rotation"),a=i.y;t.y_position=e.position.y+1.6,t.x_position=-t.data.distance*Math.sin(a*Math.PI/180),t.z_position=-t.data.distance*Math.cos(a*Math.PI/180),t.el.setAttribute("position",[t.x_position,t.y_position,t.z_position].join(" ")),this.el.object3D.lookAt(new THREE.Vector3(e.position.x,e.position.y+1.6,e.position.z))}},init:function(){var t=this;this.bar_steps=10,this.current_step=0,this.el.setAttribute("visible",!0),this.video_selector=this.data.src,this.video_el=document.querySelector(this.video_selector),t.play_image_src=document.getElementById("video-play-image")?"#video-play-image":"https://res.cloudinary.com/dxbh0pppv/image/upload/c_scale,h_512,q_10/v1471016296/play_wvmogo.png",t.pause_image_src=document.getElementById("video-pause-image")?"#video-pause-image":"https://res.cloudinary.com/dxbh0pppv/image/upload/c_scale,h_512,q_25/v1471016296/pause_ndega5.png",this.play_image=document.createElement("a-image"),this.video_el.paused?this.play_image.setAttribute("src",t.play_image_src):this.play_image.setAttribute("src",t.pause_image_src),this.video_el.addEventListener("ended",function(){t.play_image.setAttribute("src",t.play_image_src)}),this.video_el.addEventListener("pause",function(){t.play_image.setAttribute("src",t.play_image_src)}),this.video_el.addEventListener("playing",function(){t.play_image.setAttribute("src",t.pause_image_src)}),this.bar_canvas=document.createElement("canvas"),this.bar_canvas.setAttribute("id","video_player_canvas"),this.bar_canvas.width=1024,this.bar_canvas.height=256,this.bar_canvas.style.display="none",this.context=this.bar_canvas.getContext("2d"),this.texture=new THREE.Texture(this.bar_canvas),this.play_image.addEventListener("click",function(e){t.video_el.paused?(this.setAttribute("src",t.pause_image_src),t.video_el.play()):(this.setAttribute("src",t.play_image_src),t.video_el.pause()),e.stopPropagation(),e.preventDefault()}),window.addEventListener("keyup",function(e){switch(e.keyCode){case 32:t.play_image.dispatchEvent(new Event("click"));break;case 37:t.current_step=0,t.position_time_from_steps();break;case 39:t.current_step=t.bar_steps,t.position_time_from_steps();break;case 38:t.current_step=t.current_step<t.bar_steps?t.current_step+1:t.current_step,t.position_time_from_steps();break;case 40:t.current_step=t.current_step>0?t.current_step-1:t.current_step,t.position_time_from_steps()}},!1),this.bar=document.createElement("a-plane"),this.bar.setAttribute("color","#000"),this.bar.addEventListener("click",function(e){var i=document.querySelector("a-cursor").components.raycaster.raycaster.intersectObject(this.object3D,!0)[0].point,a=this.object3D.worldToLocal(i).x,s=a/t.data.size+.5;t.current_step=Math.round(s*t.bar_steps),t.video_el.readyState>0&&(t.video_el.currentTime=s*t.video_el.duration),e.stopPropagation(),e.preventDefault()}),this.el.appendChild(this.bar_canvas),this.el.appendChild(this.play_image),this.el.appendChild(this.bar),this.el.sceneEl.addEventListener("loaded",function(){t.position_control_from_camera(),this.addEventListener("dblclick",function(){var e=document.querySelector("a-cursor").components.raycaster.raycaster;0==e.intersectObject(t.el.object3D,!0).length&&(t.el.getAttribute("visible")?t.el.setAttribute("visible",!1):(t.el.setAttribute("visible",!0),t.position_control_from_camera()))})})},update:function(t){this.position_control_from_camera(),this.bar.setAttribute("height",this.data.size/4),this.bar.setAttribute("width",this.data.size),this.bar.setAttribute("position","0.0 0.0 0"),this.play_image.setAttribute("height",this.data.size/4),this.play_image.setAttribute("width",this.data.size/4),this.play_image.setAttribute("position",-this.data.size/2*1.4+" 0 0")},remove:function(){},tick:function(t){if("undefined"==typeof this.last_time||t-this.last_time>250){if(this.video_el.readyState>0){var e=Math.floor(this.video_el.currentTime/60),i=Math.floor(this.video_el.currentTime%60);e=e<10?"0"+e:e,i=i<10?"0"+i:i;var a=Math.floor(this.video_el.duration/60),s=Math.floor(this.video_el.duration%60);a=a<10?"0"+a:a,s=s<10?"0"+s:s;var r=e+":"+i+" / "+a+":"+s,o=this.bar_canvas.width/this.video_el.duration;if(this.video_el.buffered.length>0){this.current_step=Math.round(this.video_el.currentTime/this.video_el.duration*this.bar_steps);var n=this.context;if(n.fillStyle=this.data.backgroundColor,n.fillRect(0,0,this.bar_canvas.width,this.bar_canvas.height),n.font=this.data.timeTextFont,n.fillStyle="white",n.textAlign="center",n.fillText(r,this.bar_canvas.width/2,.65*this.bar_canvas.height),this.video_el.seeking)n.font=this.data.statusTextFont,n.fillStyle=this.data.textColor,n.textAlign="end",n.fillText("Seeking",.95*this.bar_canvas.width,.6*this.bar_canvas.height);else{var l=this.video_el.buffered.end(this.video_el.buffered.length-1)/this.video_el.duration*100;n.font=this.data.statusTextFont,n.fillStyle=this.data.textColor,n.textAlign="end",n.fillText(l.toFixed(0)+"% loaded",.95*this.bar_canvas.width,.6*this.bar_canvas.height)}n.fillStyle=this.data.textColor,n.font=this.data.infoTextFont,n.textAlign="center",n.fillText(this.data.infoTextTop,this.bar_canvas.width/2,.8*this.bar_canvas.height),n.fillText(this.data.infoTextBottom,this.bar_canvas.width/2,.95*this.bar_canvas.height);for(var c=0;c<this.video_el.buffered.length;c++){var d=this.video_el.buffered.start(c)*o,h=this.video_el.buffered.end(c)*o,_=h-d;n.fillStyle="grey",n.fillRect(d,0,_,this.bar_canvas.height/3)}n.fillStyle=this.data.barColor,n.fillRect(0,0,this.video_el.currentTime/this.video_el.duration*this.bar_canvas.width,this.bar_canvas.height/3)}this.bar.object3D.children.length>0&&(null===this.bar.object3D.children[0].material.map&&(this.bar.object3D.children[0].material=new THREE.MeshBasicMaterial,this.bar.object3D.children[0].material.map=this.texture),this.texture.needsUpdate=!0)}this.last_time=t}},pause:function(){},play:function(){}})}]);
+},{}],5:[function(require,module,exports){
 (function (global){
 (function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.AFRAME = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
 (function (process){
@@ -86812,7 +87845,7 @@ module.exports = getWakeLock();
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],4:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 /*!
  * jQuery JavaScript Library v3.3.1
  * https://jquery.com/
@@ -97178,7 +98211,7 @@ if ( !noGlobal ) {
 return jQuery;
 } );
 
-},{}],5:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 const dependencies = require('./dependencies')
 const StageController = require('./stage')
 const VideoController = require('./video')
@@ -97194,12 +98227,14 @@ $(() => {
     SceneController.initScene()
 })
 
-},{"./dependencies":6,"./scene":9,"./stage":10,"./video":13}],6:[function(require,module,exports){
+},{"./dependencies":8,"./scene":11,"./stage":12,"./video":15}],8:[function(require,module,exports){
 module.exports.jquery = require('jquery')
 module.exports.aframe = require('aframe')
 module.exports.htmlShader = require('aframe-html-shader')
 module.exports.videoControls = require('aframe-video-controls')
-},{"aframe":3,"aframe-html-shader":1,"aframe-video-controls":2,"jquery":4}],7:[function(require,module,exports){
+module.exports.mouseCursor = require('aframe-mouse-cursor-component')
+module.exports.eventSet = require('aframe-event-set-component')
+},{"aframe":5,"aframe-event-set-component":1,"aframe-html-shader":2,"aframe-mouse-cursor-component":3,"aframe-video-controls":4,"jquery":6}],9:[function(require,module,exports){
 const dependencies = require('./dependencies')
 const $ = dependencies.jquery
 
@@ -97241,10 +98276,19 @@ const PrimitiveObjectsController = {
             <a-text value="${text}" position="0 8 0" width="${width}" align="center"></a-text>
         `)
     },
+
+    getCursor() {
+        return $(`
+            <a-entity cursor="fuse: true; fuseTimeout: 500"
+            position="0 0 -1"
+            geometry="primitive: ring; radiusInner: 0.02; radiusOuter: 0.03"
+            material="color: #B3E5FC; shader: flat">
+        `)
+    }
 }
 
 module.exports = PrimitiveObjectsController
-},{"./dependencies":6}],8:[function(require,module,exports){
+},{"./dependencies":8}],10:[function(require,module,exports){
 const dependencies = require('./dependencies')
 const Util = require('./util')
 const $ = dependencies.jquery
@@ -97288,7 +98332,7 @@ const QuizController = {
         Object.keys(quiz.answers).forEach((index) => {
             const ansLetter = String.fromCharCode(ansLetterASCII)
             const ansCircle = `
-                <a-circle id="ans-${ansLetter}" position="${currentPos} 6 0" rotation="0 0 0" radius="2" color="${Util.colorForIndex(index)}">
+                <a-circle id="ans-${ansLetter}" position="${currentPos} 6 0" rotation="0 0 0" radius="2" color="${Util.colorForIndex(index)}" cursor-listener>
                     <a-text value="${ansLetter}" width="50" align="center">
                 </a-circle>
             `
@@ -97303,7 +98347,19 @@ const QuizController = {
 }
 
 module.exports = QuizController
-},{"./dependencies":6,"./util":12}],9:[function(require,module,exports){
+
+AFRAME.registerComponent('cursor-listener', {
+    init: function () {
+      var lastIndex = -1;
+      var COLORS = ['red', 'green', 'blue'];
+      this.el.addEventListener('mouseenter', function (evt) {
+        lastIndex = (lastIndex + 1) % COLORS.length;
+        this.setAttribute('material', 'color', COLORS[lastIndex]);
+        console.log('I was clicked at: ', evt.detail.intersection.point);
+      });
+    }
+  });
+},{"./dependencies":8,"./util":14}],11:[function(require,module,exports){
 const dependencies = require('./dependencies')
 const Util = require('./util')
 const Timeline = require('./timeline')
@@ -97343,8 +98399,6 @@ const SceneController = {
             $('#mainCamera').removeAttr('look-controls')
             $(document).css('cursor','pointer !important')
         }
-
-        
     },
 
     userStartScene() {
@@ -97395,6 +98449,9 @@ const SceneController = {
         } else if(this.currentItem.type === 'quiz') {
             console.log('start quiz')
             Quiz.getQuiz((quiz) => {
+                if(Util.isMobile()) {
+                    $('#mainCamera').append(PrimitiveObjects.getCursor())
+                }
                 const quizEntity = Quiz.generateEntity(quiz)
                 console.log(quizEntity.html())
                 $(this.stage).append(quizEntity)
@@ -97407,7 +98464,7 @@ const SceneController = {
 }
 
 module.exports = SceneController
-},{"./dependencies":6,"./primitiveObjects":7,"./quiz":8,"./stage":10,"./timeline":11,"./util":12}],10:[function(require,module,exports){
+},{"./dependencies":8,"./primitiveObjects":9,"./quiz":10,"./stage":12,"./timeline":13,"./util":14}],12:[function(require,module,exports){
 const dependencies = require('./dependencies')
 const PrimitiveObjects = require('./primitiveObjects')
 const $ = dependencies.jquery
@@ -97431,7 +98488,7 @@ const StageController = {
 }
 
 module.exports = StageController
-},{"./dependencies":6,"./primitiveObjects":7}],11:[function(require,module,exports){
+},{"./dependencies":8,"./primitiveObjects":9}],13:[function(require,module,exports){
 const TimelineController = {
     getTimeline(lectureId,callback) {
         //retrieve timeline from Firebase
@@ -97480,7 +98537,7 @@ const TimelineController = {
 }
 
 module.exports = TimelineController
-},{}],12:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 const Utilities = {
     isMobile() {
         return (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))
@@ -97499,7 +98556,7 @@ const Utilities = {
 }
 
 module.exports = Utilities
-},{}],13:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 const dependencies = require('./dependencies')
 const PrimitiveObjects = require('./primitiveObjects')
 const $ = dependencies.jquery
@@ -97533,4 +98590,4 @@ const VideoController = {
 }
 
 module.exports = VideoController
-},{"./dependencies":6,"./primitiveObjects":7}]},{},[5]);
+},{"./dependencies":8,"./primitiveObjects":9}]},{},[7]);

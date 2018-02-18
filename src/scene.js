@@ -37,8 +37,6 @@ const SceneController = {
             $('#mainCamera').removeAttr('look-controls')
             $(document).css('cursor','pointer !important')
         }
-
-        
     },
 
     userStartScene() {
@@ -89,6 +87,9 @@ const SceneController = {
         } else if(this.currentItem.type === 'quiz') {
             console.log('start quiz')
             Quiz.getQuiz((quiz) => {
+                if(Util.isMobile()) {
+                    $('#mainCamera').append(PrimitiveObjects.getCursor())
+                }
                 const quizEntity = Quiz.generateEntity(quiz)
                 console.log(quizEntity.html())
                 $(this.stage).append(quizEntity)
