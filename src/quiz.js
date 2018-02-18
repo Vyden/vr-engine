@@ -24,28 +24,33 @@ const QuizController = {
             text += String.fromCharCode(ansLetterASCII)
             text += '.) '
             text += quiz.answers[index]
+            ansLetterASCII++;
         })
         return text
     },
 
     generateEntity(quiz) {
         const numAnswers = Object.keys(quiz.answers).length
-        const leftmostPos = -6*((numAnswers/2)-1)
-        const entity = $('a-entity',{
-            id: 'quiz'
-        })
-        const entitySrc = `
+        const leftmostPos = -6*((numAnswers/2) - 1) - 3
+        const entity = $('<a-entity id="quiz"></a-entity>')
+        let entitySrc = `
             <a-text value="${this.generateText(quiz)}" align="left" width="40" position="${leftmostPos} 16 0"></a-text>
         `
+        let ansLetterASCII = 65;
         let currentPos = leftmostPos
         Object.keys(quiz.answers).forEach((index) => {
             const ansLetter = String.fromCharCode(ansLetterASCII)
             const ansCircle = `
-            <a-circle id="ans-${ansLetter}" position="${currentPos} 6 0" rotation="0 0 0" radius="2" color="${Util.colorForIndex(index)}">
-                <a-text value="${ansLetter}" width="50" align="center">
-            </a-circle>
+                <a-circle id="ans-${ansLetter}" position="${currentPos} 6 0" rotation="0 0 0" radius="2" color="${Util.colorForIndex(index)}">
+                    <a-text value="${ansLetter}" width="50" align="center">
+                </a-circle>
             `
+            entitySrc += ansCircle
+            currentPos += 6
+            ansLetterASCII++
         })
+        entity.html(entitySrc)
+        return entity
     }
 
 }

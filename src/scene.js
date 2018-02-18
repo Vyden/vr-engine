@@ -23,9 +23,9 @@ const SceneController = {
 
             //listen for user to start scene
             this.userInitialized = false
-            /*$(document).click(function() {
+            $(document).click(function() {
                 if(!this.userInitialized) this.userStartScene()
-            }.bind(this))*/
+            }.bind(this))
 
         }.bind(this))
 
@@ -87,10 +87,14 @@ const SceneController = {
             }.bind(this),1000)
         } else if(this.currentItem.type === 'quiz') {
             console.log('start quiz')
-            $(this.stage).append(PrimitiveObjects.getText('Quizzing...',36))
-            setTimeout(function() {
-                this.presentNext()
-            }.bind(this),this.currentItem.quizTime)
+            Quiz.getQuiz((quiz) => {
+                const quizEntity = Quiz.generateEntity(quiz)
+                console.log(quizEntity.html())
+                $(this.stage).append(quizEntity)
+                setTimeout(function() {
+                    this.presentNext()
+                }.bind(this),this.currentItem.quizTime)
+            })         
         }
     }
 }

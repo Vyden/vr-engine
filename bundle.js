@@ -97271,28 +97271,33 @@ const QuizController = {
             text += String.fromCharCode(ansLetterASCII)
             text += '.) '
             text += quiz.answers[index]
+            ansLetterASCII++;
         })
         return text
     },
 
     generateEntity(quiz) {
         const numAnswers = Object.keys(quiz.answers).length
-        const leftmostPos = -6*((numAnswers/2)-1)
-        const entity = $('a-entity',{
-            id: 'quiz'
-        })
-        const entitySrc = `
+        const leftmostPos = -6*((numAnswers/2) - 1) - 3
+        const entity = $('<a-entity id="quiz"></a-entity>')
+        let entitySrc = `
             <a-text value="${this.generateText(quiz)}" align="left" width="40" position="${leftmostPos} 16 0"></a-text>
         `
+        let ansLetterASCII = 65;
         let currentPos = leftmostPos
         Object.keys(quiz.answers).forEach((index) => {
             const ansLetter = String.fromCharCode(ansLetterASCII)
             const ansCircle = `
-            <a-circle id="ans-${ansLetter}" position="${currentPos} 6 0" rotation="0 0 0" radius="2" color="${Util.colorForIndex(index)}">
-                <a-text value="${ansLetter}" width="50" align="center">
-            </a-circle>
+                <a-circle id="ans-${ansLetter}" position="${currentPos} 6 0" rotation="0 0 0" radius="2" color="${Util.colorForIndex(index)}">
+                    <a-text value="${ansLetter}" width="50" align="center">
+                </a-circle>
             `
+            entitySrc += ansCircle
+            currentPos += 6
+            ansLetterASCII++
         })
+        entity.html(entitySrc)
+        return entity
     }
 
 }
@@ -97324,9 +97329,9 @@ const SceneController = {
 
             //listen for user to start scene
             this.userInitialized = false
-            /*$(document).click(function() {
+            $(document).click(function() {
                 if(!this.userInitialized) this.userStartScene()
-            }.bind(this))*/
+            }.bind(this))
 
         }.bind(this))
 
@@ -97388,10 +97393,14 @@ const SceneController = {
             }.bind(this),1000)
         } else if(this.currentItem.type === 'quiz') {
             console.log('start quiz')
-            $(this.stage).append(PrimitiveObjects.getText('Quizzing...',36))
-            setTimeout(function() {
-                this.presentNext()
-            }.bind(this),this.currentItem.quizTime)
+            Quiz.getQuiz((quiz) => {
+                const quizEntity = Quiz.generateEntity(quiz)
+                console.log(quizEntity.html())
+                $(this.stage).append(quizEntity)
+                setTimeout(function() {
+                    this.presentNext()
+                }.bind(this),this.currentItem.quizTime)
+            })         
         }
     }
 }
@@ -97427,7 +97436,8 @@ const TimelineController = {
         //retrieve timeline from Firebase
 
         //return fake timeline for now
-        callback([{
+        callback([
+        {
             id: "abc123",
             lecture: "5678",
             type: "video",
@@ -97439,14 +97449,14 @@ const TimelineController = {
             lecture: "5678",
             type: "quiz",
             eventTime: 10000,
-            quizTime: 60000,
+            quizTime: 10000,
             resource: 'quizID',
         },
         {
             id: "abc123",
             lecture: "5678",
             type: "video",
-            eventTime: 70000,
+            eventTime: 20000,
             resource: 'https://vyden.nyc3.digitaloceanspaces.com/videos/Sequence_01_3.mp4',
         }]) 
     },

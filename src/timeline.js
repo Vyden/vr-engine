@@ -3,7 +3,8 @@ const TimelineController = {
         //retrieve timeline from Firebase
 
         //return fake timeline for now
-        callback([{
+        callback([
+        {
             id: "abc123",
             lecture: "5678",
             type: "video",
@@ -15,14 +16,14 @@ const TimelineController = {
             lecture: "5678",
             type: "quiz",
             eventTime: 10000,
-            quizTime: 60000,
+            quizTime: 10000,
             resource: 'quizID',
         },
         {
             id: "abc123",
             lecture: "5678",
             type: "video",
-            eventTime: 70000,
+            eventTime: 20000,
             resource: 'https://vyden.nyc3.digitaloceanspaces.com/videos/Sequence_01_3.mp4',
         }]) 
     },
