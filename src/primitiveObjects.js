@@ -42,7 +42,7 @@ const PrimitiveObjectsController = {
 
     getCursor() {
         return $(`
-            <a-entity cursor="fuse: true; fuseTimeout: 500"
+            <a-entity cursor="fuse: true; fuseTimeout: 2000"
             position="0 0 -1"
             geometry="primitive: ring; radiusInner: 0.02; radiusOuter: 0.03"
             material="color: #B3E5FC; shader: flat">
