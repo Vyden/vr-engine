@@ -98477,9 +98477,6 @@ const SceneController = {
                 $(this.stage).append(quizEntity)
                 this.currentItem.controller = Quiz
                 Quiz.controlQuiz(this)
-                setTimeout(function() {
-                    this.presentNext()
-                }.bind(this),this.currentItem.quizTime)
             })
         }
     }
@@ -98521,7 +98518,7 @@ const TimelineController = {
             lecture: "5678",
             type: "video",
             eventTime: 0,
-            resource: 'https://vyden.nyc3.digitaloceanspaces.com/videos/do_u_know_da_way_(original_video).mp4',
+            resource: 'https://vyden.nyc3.digitaloceanspaces.com/videos/Sequence_01_3.mp4',
         },
         {
             id: "abc123",
@@ -98536,7 +98533,7 @@ const TimelineController = {
             lecture: "5678",
             type: "video",
             eventTime: 20000,
-            resource: 'https://vyden.nyc3.digitaloceanspaces.com/videos/do_u_know_da_way_(original_video).mp4',
+            resource: 'https://vyden.nyc3.digitaloceanspaces.com/videos/Sequence_01_3.mp4',
         }]) 
     },
 

@@ -95,9 +95,6 @@ const SceneController = {
                 $(this.stage).append(quizEntity)
                 this.currentItem.controller = Quiz
                 Quiz.controlQuiz(this)
-                setTimeout(function() {
-                    this.presentNext()
-                }.bind(this),this.currentItem.quizTime)
             })
         }
     }
