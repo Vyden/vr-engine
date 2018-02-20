@@ -98222,6 +98222,7 @@ StageController.registerComponent()
 VideoController.registerComponent()
 
 const playing = false;
+document.currentScene = SceneController;
 
 $(() => {
     SceneController.initScene()
@@ -98332,7 +98333,7 @@ const QuizController = {
         Object.keys(quiz.answers).forEach((index) => {
             const ansLetter = String.fromCharCode(ansLetterASCII)
             const ansCircle = `
-                <a-circle id="ans-${ansLetter}" position="${currentPos} 6 0" rotation="0 0 0" radius="2" color="${Util.colorForIndex(index)}" cursor-listener>
+                <a-circle id="ans-${ansLetter}" ans="${index}" position="${currentPos} 6 0" rotation="0 0 0" radius="2" color="${Util.colorForIndex(index)}" cursor-listener>
                     <a-text value="${ansLetter}" width="50" align="center">
                 </a-circle>
             `
@@ -98342,6 +98343,19 @@ const QuizController = {
         })
         entity.html(entitySrc)
         return entity
+    },
+
+    controlQuiz(scene) {
+        this.scene = scene
+        this.quiz = scene.currentItem
+        setTimeout(function() {
+            scene.presentNext()
+        },this.quiz.quizTime)
+    },
+
+    submitAnswer(index) {
+        this.answer = index;
+        //send over to firebase
     }
 
 }
@@ -98353,6 +98367,12 @@ AFRAME.registerComponent('cursor-listener', {
       var lastIndex = -1;
       var COLORS = ['red', 'green', 'blue'];
       this.el.addEventListener('click', function (evt) {
+        lastIndex = (lastIndex + 1) % COLORS.length;
+        this.setAttribute('material', 'color', COLORS[lastIndex]);
+        console.log('I was clicked at: ', evt.detail.intersection.point);
+        console.log(document.currentScene.currentItem)
+      });
+      this.el.addEventListener('mouseEnter', function (evt) {
         lastIndex = (lastIndex + 1) % COLORS.length;
         this.setAttribute('material', 'color', COLORS[lastIndex]);
         console.log('I was clicked at: ', evt.detail.intersection.point);
@@ -98455,10 +98475,12 @@ const SceneController = {
                 const quizEntity = Quiz.generateEntity(quiz)
                 console.log(quizEntity.html())
                 $(this.stage).append(quizEntity)
+                this.currentItem.controller = Quiz
+                Quiz.controlQuiz(this)
                 setTimeout(function() {
                     this.presentNext()
                 }.bind(this),this.currentItem.quizTime)
-            })         
+            })
         }
     }
 }
@@ -98499,7 +98521,7 @@ const TimelineController = {
             lecture: "5678",
             type: "video",
             eventTime: 0,
-            resource: 'https://vyden.nyc3.digitaloceanspaces.com/videos/Sequence_01_3.mp4',
+            resource: 'https://vyden.nyc3.digitaloceanspaces.com/videos/do_u_know_da_way_(original_video).mp4',
         },
         {
             id: "abc123",
@@ -98514,7 +98536,7 @@ const TimelineController = {
             lecture: "5678",
             type: "video",
             eventTime: 20000,
-            resource: 'https://vyden.nyc3.digitaloceanspaces.com/videos/Sequence_01_3.mp4',
+            resource: 'https://vyden.nyc3.digitaloceanspaces.com/videos/do_u_know_da_way_(original_video).mp4',
         }]) 
     },
 

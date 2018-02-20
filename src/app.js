@@ -8,6 +8,7 @@ StageController.registerComponent()
 VideoController.registerComponent()
 
 const playing = false;
+document.currentScene = SceneController;
 
 $(() => {
     SceneController.initScene()
