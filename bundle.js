@@ -98280,7 +98280,7 @@ const PrimitiveObjectsController = {
 
     getCursor() {
         return $(`
-            <a-entity cursor="fuse: true; fuseTimeout: 2000"
+            <a-entity id="mobileCursor" cursor="fuse: true; fuseTimeout: 2000"
             position="0 0 -1"
             geometry="primitive: ring; radiusInner: 0.02; radiusOuter: 0.03"
             material="color: #B3E5FC; shader: flat">
@@ -98350,6 +98350,7 @@ const QuizController = {
         this.quiz = scene.currentItem
         this.timeout = setTimeout(function() {
             scene.presentNext()
+            $('#mobileCursor').remove()
         },this.quiz.quizTime)
     },
 
@@ -98357,6 +98358,7 @@ const QuizController = {
         this.answer = index;
         clearTimeout(this.timeout)
         this.scene.presentNext()
+        $('#mobileCursor').remove()
         console.log("submit index: " + index)
         //send over to firebase
     }

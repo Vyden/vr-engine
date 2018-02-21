@@ -58,6 +58,7 @@ const QuizController = {
         this.quiz = scene.currentItem
         this.timeout = setTimeout(function() {
             scene.presentNext()
+            $('#mobileCursor').remove()
         },this.quiz.quizTime)
     },
 
@@ -65,6 +66,7 @@ const QuizController = {
         this.answer = index;
         clearTimeout(this.timeout)
         this.scene.presentNext()
+        $('#mobileCursor').remove()
         console.log("submit index: " + index)
         //send over to firebase
     }
