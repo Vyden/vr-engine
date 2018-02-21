@@ -41,7 +41,7 @@ const QuizController = {
         Object.keys(quiz.answers).forEach((index) => {
             const ansLetter = String.fromCharCode(ansLetterASCII)
             const ansCircle = `
-                <a-circle id="ans-${ansLetter}" ans="${index}" position="${currentPos} 6 0" rotation="0 0 0" radius="2" color="${Util.colorForIndex(index)}" cursor-listener>
+                <a-circle id="ans-${ansLetter}" data-ans="${index}" position="${currentPos} 6 0" rotation="0 0 0" radius="2" color="${Util.colorForIndex(index)}" cursor-listener>
                     <a-text value="${ansLetter}" width="50" align="center">
                 </a-circle>
             `
@@ -56,13 +56,16 @@ const QuizController = {
     controlQuiz(scene) {
         this.scene = scene
         this.quiz = scene.currentItem
-        setTimeout(function() {
+        this.timeout = setTimeout(function() {
             scene.presentNext()
         },this.quiz.quizTime)
     },
 
     submitAnswer(index) {
         this.answer = index;
+        clearTimeout(this.timeout)
+        this.scene.presentNext()
+        console.log("submit index: " + index)
         //send over to firebase
     }
 
@@ -74,16 +77,18 @@ AFRAME.registerComponent('cursor-listener', {
     init: function () {
       var lastIndex = -1;
       var COLORS = ['red', 'green', 'blue'];
-      this.el.addEventListener('click', function (evt) {
+      this.el.addEventListener('click', function (event) {
         lastIndex = (lastIndex + 1) % COLORS.length;
         this.setAttribute('material', 'color', COLORS[lastIndex]);
-        console.log('I was clicked at: ', evt.detail.intersection.point);
+        const quiz = document.currentScene.currentItem
+        console.log("ans " + event.target.dataset.ans)
+        quiz.controller.submitAnswer(parseInt(event.target.dataset.ans))
         console.log(document.currentScene.currentItem)
+
       });
-      this.el.addEventListener('mouseEnter', function (evt) {
+      this.el.addEventListener('mouseEnter', function (event) {
         lastIndex = (lastIndex + 1) % COLORS.length;
         this.setAttribute('material', 'color', COLORS[lastIndex]);
-        console.log('I was clicked at: ', evt.detail.intersection.point);
       });
     }
   });
