@@ -16,7 +16,6 @@ const SceneController = {
 
         Timeline.getTimeline('<lectureID>',function(timeline){
             //set the scene timeline
-            console.log('this from scene',this)
             this.timeline = timeline
             this.stage = document.getElementById('stage')
             //set video for the scene
@@ -44,7 +43,7 @@ const SceneController = {
 
     loadData() {
         DataController.getCourseIDFromURL()
-        
+
     },
 
     userStartScene() {
