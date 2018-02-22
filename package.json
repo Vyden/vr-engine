@@ -16,6 +16,7 @@
     "aframe-mouse-cursor-component": "^0.5.2",
     "aframe-textwrap-component": "^1.0.1",
     "aframe-video-controls": "^0.3.0",
+    "get-url-param": "^1.0.1",
     "jquery": "^3.3.1"
   }
 }

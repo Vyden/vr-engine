@@ -2,6 +2,7 @@ const dependencies = require('./dependencies')
 const StageController = require('./stage')
 const VideoController = require('./video')
 const SceneController = require('./scene')
+const DataController = require('./data')
 const $ = dependencies.jquery
 
 StageController.registerComponent()

@@ -4,12 +4,15 @@ const Timeline = require('./timeline')
 const Stage = require('./stage')
 const Quiz = require('./quiz')
 const PrimitiveObjects = require('./primitiveObjects')
+const DataController = require('./data')
 const $ = dependencies.jquery
 
 const SceneController = {
     initScene() {
         //will be dynamic, for now use sample video
         $('#videoPlane').attr('visible',false);
+
+        this.loadData()
 
         Timeline.getTimeline('<lectureID>',function(timeline){
             //set the scene timeline
@@ -37,6 +40,11 @@ const SceneController = {
             $('#mainCamera').removeAttr('look-controls')
             $(document).css('cursor','pointer !important')
         }
+    },
+
+    loadData() {
+        DataController.getCourseIDFromURL()
+        
     },
 
     userStartScene() {
