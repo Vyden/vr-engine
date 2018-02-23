@@ -41,7 +41,7 @@ const QuizController = {
         Object.keys(quiz.answers).forEach((index) => {
             const ansLetter = String.fromCharCode(ansLetterASCII)
             const ansCircle = `
-                <a-circle id="ans-${ansLetter}" data-ans="${index}" position="${currentPos} 6 0" rotation="0 0 0" radius="2" color="${Util.colorForIndex(index)}" cursor-listener>
+                <a-circle id="ans-${ansLetter}" data-ans="${index}" position="${currentPos} 8 0" rotation="0 0 0" radius="2" color="${Util.colorForIndex(index)}" cursor-listener>
                     <a-text value="${ansLetter}" width="50" align="center">
                 </a-circle>
             `
@@ -83,6 +83,7 @@ const QuizController = {
         clearTimeout(this.timeout)
         this.finishQuiz()
         console.log("submit index: " + index)
+        this.scene.DataController.submitAnswerForQuiz(this.scene.currentItem.resource,index)
         //send over to firebase
     }
 

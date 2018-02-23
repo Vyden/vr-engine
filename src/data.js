@@ -68,6 +68,16 @@ const DataController = {
             console.log("about to send quiz",quiz)
             callback(quiz)
         })
+    },
+
+    submitAnswerForQuiz(quizID,answer) {
+        const responseID = this.database.ref('Courses/hesgotapumpee/lectures/lectureQuizResponses/' + this.lectureID).push().key
+        this.database.ref('Courses/hesgotapumpee/lectureQuizResponses/' + this.lectureID + '/' + responseID).set({
+            id: responseID,
+            selection: answer,
+            date: Date.now(),
+            quiz: quizID
+        })
     }
 }
 

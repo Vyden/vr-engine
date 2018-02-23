@@ -12,6 +12,7 @@ const SceneController = {
         //will be dynamic, for now use sample video
         $('#videoPlane').attr('visible',false);
 
+        this.DataController = DataController
         DataController.intializeFirebase()
         DataController.getTimelineFromFirebase(function(timeline) {
             console.log("got timeline",timeline)
@@ -36,23 +37,6 @@ const SceneController = {
                 $(document).css('cursor','pointer !important')
             }
         }.bind(this))
-
-        // Data.getTimeline('<lectureID>',function(timeline){
-        //     //set the scene timeline
-        //     this.timeline = timeline
-        //     this.stage = document.getElementById('stage')
-        //     //set video for the scene
-        //     const videoURL = Timeline.getVideoFromTimeline(timeline)
-        //     this.videoURL = videoURL
-        //     $('#video').attr('src',this.videoURL)
-
-        //     //listen for user to start scene
-        //     this.userInitialized = false
-        //     $(document).click(function() {
-        //         if(!this.userInitialized) this.userStartScene()
-        //     }.bind(this))
-
-        // }.bind(this))
 
         //set properties for desktop viewing
     },

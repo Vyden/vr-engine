@@ -123901,6 +123901,16 @@ const DataController = {
             console.log("about to send quiz",quiz)
             callback(quiz)
         })
+    },
+
+    submitAnswerForQuiz(quizID,answer) {
+        const responseID = this.database.ref('Courses/hesgotapumpee/lectures/lectureQuizResponses/' + this.lectureID).push().key
+        this.database.ref('Courses/hesgotapumpee/lectureQuizResponses/' + this.lectureID + '/' + responseID).set({
+            id: responseID,
+            selection: answer,
+            date: Date.now(),
+            quiz: quizID
+        })
     }
 }
 
@@ -124010,7 +124020,7 @@ const QuizController = {
         Object.keys(quiz.answers).forEach((index) => {
             const ansLetter = String.fromCharCode(ansLetterASCII)
             const ansCircle = `
-                <a-circle id="ans-${ansLetter}" data-ans="${index}" position="${currentPos} 6 0" rotation="0 0 0" radius="2" color="${Util.colorForIndex(index)}" cursor-listener>
+                <a-circle id="ans-${ansLetter}" data-ans="${index}" position="${currentPos} 8 0" rotation="0 0 0" radius="2" color="${Util.colorForIndex(index)}" cursor-listener>
                     <a-text value="${ansLetter}" width="50" align="center">
                 </a-circle>
             `
@@ -124052,6 +124062,7 @@ const QuizController = {
         clearTimeout(this.timeout)
         this.finishQuiz()
         console.log("submit index: " + index)
+        this.scene.DataController.submitAnswerForQuiz(this.scene.currentItem.resource,index)
         //send over to firebase
     }
 
@@ -124093,6 +124104,7 @@ const SceneController = {
         //will be dynamic, for now use sample video
         $('#videoPlane').attr('visible',false);
 
+        this.DataController = DataController
         DataController.intializeFirebase()
         DataController.getTimelineFromFirebase(function(timeline) {
             console.log("got timeline",timeline)
@@ -124117,23 +124129,6 @@ const SceneController = {
                 $(document).css('cursor','pointer !important')
             }
         }.bind(this))
-
-        // Data.getTimeline('<lectureID>',function(timeline){
-        //     //set the scene timeline
-        //     this.timeline = timeline
-        //     this.stage = document.getElementById('stage')
-        //     //set video for the scene
-        //     const videoURL = Timeline.getVideoFromTimeline(timeline)
-        //     this.videoURL = videoURL
-        //     $('#video').attr('src',this.videoURL)
-
-        //     //listen for user to start scene
-        //     this.userInitialized = false
-        //     $(document).click(function() {
-        //         if(!this.userInitialized) this.userStartScene()
-        //     }.bind(this))
-
-        // }.bind(this))
 
         //set properties for desktop viewing
     },
