@@ -124110,6 +124110,7 @@ const SceneController = {
     initScene() {
         //will be dynamic, for now use sample video
         $('#videoPlane').attr('visible',false);
+        $('#lecStart').attr('visible',false)
 
         this.DataController = DataController
         DataController.intializeFirebase()
@@ -124121,13 +124122,11 @@ const SceneController = {
             const videoURL = Timeline.getVideoFromTimeline(timeline)
             this.videoURL = videoURL
             $('#video').attr('src',this.videoURL)
-
             //listen for user to start scene
             this.userInitialized = false
             $(document).click(function() {
                 if(!this.userInitialized) this.userStartScene()
             }.bind(this))
-
             if(!Util.isMobile()) {
                 $('#lecStart').attr('value','Click anywhere to\n start the lecture...')
                 $('.a-enter-vr').hide()
@@ -124135,6 +124134,8 @@ const SceneController = {
                 $('#mainCamera').removeAttr('look-controls')
                 $(document).css('cursor','pointer !important')
             }
+            $('#lecStart').attr('visible',true)
+
         }.bind(this))
 
         //set properties for desktop viewing
