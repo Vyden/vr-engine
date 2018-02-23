@@ -123837,7 +123837,10 @@ const Secrets = require('./secrets')
 
 const DataController = {
     intializeFirebase() {
-        this.lectureID = '-L6-3jZDLPEdmPEH70jQ'
+        // this.lectureID = '-L6-3jZDLPEdmPEH70jQ'
+        // this.courseID = 'hesgotapumpee'
+        this.getLectureIDFromURL()
+        this.getCourseIDFromURL()
         Firebase.initializeApp(Secrets.firebaseConfig)
         this.database = Firebase.database()
     },
@@ -123878,11 +123881,15 @@ const DataController = {
     },
 
     getLectureIDFromURL() {
-        this.lectureID = GetURLParam(window.location.href,'id')
+        this.lectureID = GetURLParam(window.location.href,'lecture')
+    },
+
+    getCourseIDFromURL() {
+        this.courseID = GetURLParam(window.location.href,'course')
     },
 
     getTimelineFromFirebase(callback) {
-        this.database.ref('/Courses/hesgotapumpee/lectures/' + this.lectureID).once('value').then(function(snapshot) {
+        this.database.ref('/Courses/' + this.courseID + '/lectures/' + this.lectureID).once('value').then(function(snapshot) {
             const lecture = snapshot.val()
             let timeline = []
             Object.keys(lecture.timeline).forEach((key) => {
@@ -123894,7 +123901,7 @@ const DataController = {
     },
 
     getQuizFromTimelineItem(timelineItem,callback) {
-        this.database.ref('/Courses/hesgotapumpee/quizzes/' + timelineItem.resource + '/').once('value').then(function(snapshot) {
+        this.database.ref('/Courses/' + this.courseID + '/quizzes/' + timelineItem.resource + '/').once('value').then(function(snapshot) {
             console.log("the quiz id:",timelineItem.resource)
             const quiz = snapshot.val()
             quiz.time = parseInt(quiz.time) * 1000
@@ -123904,7 +123911,7 @@ const DataController = {
     },
 
     submitAnswerForQuiz(quizID,answer) {
-        const responseID = this.database.ref('Courses/hesgotapumpee/lectures/lectureQuizResponses/' + this.lectureID).push().key
+        const responseID = this.database.ref('Courses/' + this.courseID +'/lectures/lectureQuizResponses/' + this.lectureID).push().key
         this.database.ref('Courses/hesgotapumpee/lectureQuizResponses/' + this.lectureID + '/' + responseID).set({
             id: responseID,
             selection: answer,
