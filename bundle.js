@@ -123837,6 +123837,7 @@ const Secrets = require('./secrets')
 
 const DataController = {
     intializeFirebase() {
+        this.lectureID = '-L6-3jZDLPEdmPEH70jQ'
         Firebase.initializeApp(Secrets.firebaseConfig)
         this.database = Firebase.database()
     },
@@ -123881,11 +123882,25 @@ const DataController = {
     },
 
     getTimelineFromFirebase(callback) {
-
+        this.database.ref('/Courses/hesgotapumpee/lectures/' + this.lectureID).once('value').then(function(snapshot) {
+            const lecture = snapshot.val()
+            let timeline = []
+            Object.keys(lecture.timeline).forEach((key) => {
+                lecture.timeline[key].eventTime *= 1000
+                timeline.push(lecture.timeline[key])
+            })
+            callback(timeline)
+        })
     },
 
-    getQuizFromTimelineItem(callback) {
-        
+    getQuizFromTimelineItem(timelineItem,callback) {
+        this.database.ref('/Courses/hesgotapumpee/quizzes/' + timelineItem.resource + '/').once('value').then(function(snapshot) {
+            console.log("the quiz id:",timelineItem.resource)
+            const quiz = snapshot.val()
+            quiz.time = parseInt(quiz.time) * 1000
+            console.log("about to send quiz",quiz)
+            callback(quiz)
+        })
     }
 }
 
@@ -124009,18 +124024,33 @@ const QuizController = {
 
     controlQuiz(scene) {
         this.scene = scene
-        this.quiz = scene.currentItem
+        this.quiz = scene.currentItem.quiz
+        console.log("control quiz:",this.quiz)
         this.timeout = setTimeout(function() {
-            scene.presentNext()
-            $('#mobileCursor').remove()
-        },this.quiz.quizTime)
+            //scene.presentNext()
+            console.log("timeout reached")
+            this.finishQuiz()
+        }.bind(this),this.quiz.time)
+    },
+
+    finishQuiz() {
+        const video = document.getElementById('video')
+        if((video.duration - video.currentTime) > 1 && this.scene.timeline.length == 0) {
+            this.scene.timeline.push({
+                id: "tempVideo",
+                type: "video",
+                resource: this.scene.videoURL
+            })
+        }
+        $('#mobileCursor').remove()
+        console.log("remaining timeline",this.scene.timeline)
+        this.scene.presentNext()
     },
 
     submitAnswer(index) {
         this.answer = index;
         clearTimeout(this.timeout)
-        this.scene.presentNext()
-        $('#mobileCursor').remove()
+        this.finishQuiz()
         console.log("submit index: " + index)
         //send over to firebase
     }
@@ -124063,10 +124093,9 @@ const SceneController = {
         //will be dynamic, for now use sample video
         $('#videoPlane').attr('visible',false);
 
-        this.loadData()
-
-        Timeline.getTimeline('<lectureID>',function(timeline){
-            //set the scene timeline
+        DataController.intializeFirebase()
+        DataController.getTimelineFromFirebase(function(timeline) {
+            console.log("got timeline",timeline)
             this.timeline = timeline
             this.stage = document.getElementById('stage')
             //set video for the scene
@@ -124080,20 +124109,37 @@ const SceneController = {
                 if(!this.userInitialized) this.userStartScene()
             }.bind(this))
 
+            if(!Util.isMobile()) {
+                $('#lecStart').attr('value','Click anywhere to\n start the lecture...')
+                $('.a-enter-vr').hide()
+                $('#videoPlane').attr('position','0 10 16')
+                $('#mainCamera').removeAttr('look-controls')
+                $(document).css('cursor','pointer !important')
+            }
         }.bind(this))
 
+        // Data.getTimeline('<lectureID>',function(timeline){
+        //     //set the scene timeline
+        //     this.timeline = timeline
+        //     this.stage = document.getElementById('stage')
+        //     //set video for the scene
+        //     const videoURL = Timeline.getVideoFromTimeline(timeline)
+        //     this.videoURL = videoURL
+        //     $('#video').attr('src',this.videoURL)
+
+        //     //listen for user to start scene
+        //     this.userInitialized = false
+        //     $(document).click(function() {
+        //         if(!this.userInitialized) this.userStartScene()
+        //     }.bind(this))
+
+        // }.bind(this))
+
         //set properties for desktop viewing
-        if(!Util.isMobile()) {
-            $('#lecStart').attr('value','Click anywhere to\n start the lecture...')
-            $('.a-enter-vr').hide()
-            $('#videoPlane').attr('position','0 10 16')
-            $('#mainCamera').removeAttr('look-controls')
-            $(document).css('cursor','pointer !important')
-        }
     },
 
     loadData() {
-        DataController.getCourseIDFromURL()
+        
 
     },
 
@@ -124144,16 +124190,18 @@ const SceneController = {
             }.bind(this),1000)
         } else if(this.currentItem.type === 'quiz') {
             console.log('start quiz')
-            Quiz.getQuiz((quiz) => {
+            DataController.getQuizFromTimelineItem(this.currentItem,function(quiz) {
                 if(Util.isMobile()) {
                     $('#mainCamera').append(PrimitiveObjects.getCursor())
                 }
+                console.log("quiz in callback",quiz)
                 const quizEntity = Quiz.generateEntity(quiz)
                 console.log(quizEntity.html())
                 $(this.stage).append(quizEntity)
                 this.currentItem.controller = Quiz
+                this.currentItem.quiz = quiz
                 Quiz.controlQuiz(this)
-            })
+            }.bind(this))
         }
     }
 }
@@ -124203,7 +124251,7 @@ const TimelineController = {
             lecture: "5678",
             type: "video",
             eventTime: 0,
-            resource: 'https://vyden.nyc3.digitaloceanspaces.com/videos/Why%20Alien%20Life%20Would%20be%20our%20Doom%20-%20The%20Great%20Filter.mp4',
+            resource: 'https://vyden.nyc3.digitaloceanspaces.com/videos/f47c423d-ca00-4ccf-a9ba-ca7a196394d8',
         },
         {
             id: "abc123",
@@ -124218,7 +124266,7 @@ const TimelineController = {
             lecture: "5678",
             type: "video",
             eventTime: 20000,
-            resource: 'https://vyden.nyc3.digitaloceanspaces.com/videos/Why%20Alien%20Life%20Would%20be%20our%20Doom%20-%20The%20Great%20Filter.mp4',
+            resource: 'https://vyden.nyc3.digitaloceanspaces.com/videos/f47c423d-ca00-4ccf-a9ba-ca7a196394d8',
         }]) 
     },
 

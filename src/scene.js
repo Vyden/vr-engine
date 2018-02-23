@@ -12,10 +12,9 @@ const SceneController = {
         //will be dynamic, for now use sample video
         $('#videoPlane').attr('visible',false);
 
-        this.loadData()
-
-        Timeline.getTimeline('<lectureID>',function(timeline){
-            //set the scene timeline
+        DataController.intializeFirebase()
+        DataController.getTimelineFromFirebase(function(timeline) {
+            console.log("got timeline",timeline)
             this.timeline = timeline
             this.stage = document.getElementById('stage')
             //set video for the scene
@@ -29,20 +28,37 @@ const SceneController = {
                 if(!this.userInitialized) this.userStartScene()
             }.bind(this))
 
+            if(!Util.isMobile()) {
+                $('#lecStart').attr('value','Click anywhere to\n start the lecture...')
+                $('.a-enter-vr').hide()
+                $('#videoPlane').attr('position','0 10 16')
+                $('#mainCamera').removeAttr('look-controls')
+                $(document).css('cursor','pointer !important')
+            }
         }.bind(this))
 
+        // Data.getTimeline('<lectureID>',function(timeline){
+        //     //set the scene timeline
+        //     this.timeline = timeline
+        //     this.stage = document.getElementById('stage')
+        //     //set video for the scene
+        //     const videoURL = Timeline.getVideoFromTimeline(timeline)
+        //     this.videoURL = videoURL
+        //     $('#video').attr('src',this.videoURL)
+
+        //     //listen for user to start scene
+        //     this.userInitialized = false
+        //     $(document).click(function() {
+        //         if(!this.userInitialized) this.userStartScene()
+        //     }.bind(this))
+
+        // }.bind(this))
+
         //set properties for desktop viewing
-        if(!Util.isMobile()) {
-            $('#lecStart').attr('value','Click anywhere to\n start the lecture...')
-            $('.a-enter-vr').hide()
-            $('#videoPlane').attr('position','0 10 16')
-            $('#mainCamera').removeAttr('look-controls')
-            $(document).css('cursor','pointer !important')
-        }
     },
 
     loadData() {
-        DataController.getCourseIDFromURL()
+        
 
     },
 
@@ -93,16 +109,18 @@ const SceneController = {
             }.bind(this),1000)
         } else if(this.currentItem.type === 'quiz') {
             console.log('start quiz')
-            Quiz.getQuiz((quiz) => {
+            DataController.getQuizFromTimelineItem(this.currentItem,function(quiz) {
                 if(Util.isMobile()) {
                     $('#mainCamera').append(PrimitiveObjects.getCursor())
                 }
+                console.log("quiz in callback",quiz)
                 const quizEntity = Quiz.generateEntity(quiz)
                 console.log(quizEntity.html())
                 $(this.stage).append(quizEntity)
                 this.currentItem.controller = Quiz
+                this.currentItem.quiz = quiz
                 Quiz.controlQuiz(this)
-            })
+            }.bind(this))
         }
     }
 }

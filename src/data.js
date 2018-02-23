@@ -4,6 +4,7 @@ const Secrets = require('./secrets')
 
 const DataController = {
     intializeFirebase() {
+        this.lectureID = '-L6-3jZDLPEdmPEH70jQ'
         Firebase.initializeApp(Secrets.firebaseConfig)
         this.database = Firebase.database()
     },
@@ -48,11 +49,25 @@ const DataController = {
     },
 
     getTimelineFromFirebase(callback) {
-
+        this.database.ref('/Courses/hesgotapumpee/lectures/' + this.lectureID).once('value').then(function(snapshot) {
+            const lecture = snapshot.val()
+            let timeline = []
+            Object.keys(lecture.timeline).forEach((key) => {
+                lecture.timeline[key].eventTime *= 1000
+                timeline.push(lecture.timeline[key])
+            })
+            callback(timeline)
+        })
     },
 
-    getQuizFromTimelineItem(callback) {
-        
+    getQuizFromTimelineItem(timelineItem,callback) {
+        this.database.ref('/Courses/hesgotapumpee/quizzes/' + timelineItem.resource + '/').once('value').then(function(snapshot) {
+            console.log("the quiz id:",timelineItem.resource)
+            const quiz = snapshot.val()
+            quiz.time = parseInt(quiz.time) * 1000
+            console.log("about to send quiz",quiz)
+            callback(quiz)
+        })
     }
 }
 

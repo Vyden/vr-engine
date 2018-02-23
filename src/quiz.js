@@ -55,18 +55,33 @@ const QuizController = {
 
     controlQuiz(scene) {
         this.scene = scene
-        this.quiz = scene.currentItem
+        this.quiz = scene.currentItem.quiz
+        console.log("control quiz:",this.quiz)
         this.timeout = setTimeout(function() {
-            scene.presentNext()
-            $('#mobileCursor').remove()
-        },this.quiz.quizTime)
+            //scene.presentNext()
+            console.log("timeout reached")
+            this.finishQuiz()
+        }.bind(this),this.quiz.time)
+    },
+
+    finishQuiz() {
+        const video = document.getElementById('video')
+        if((video.duration - video.currentTime) > 1 && this.scene.timeline.length == 0) {
+            this.scene.timeline.push({
+                id: "tempVideo",
+                type: "video",
+                resource: this.scene.videoURL
+            })
+        }
+        $('#mobileCursor').remove()
+        console.log("remaining timeline",this.scene.timeline)
+        this.scene.presentNext()
     },
 
     submitAnswer(index) {
         this.answer = index;
         clearTimeout(this.timeout)
-        this.scene.presentNext()
-        $('#mobileCursor').remove()
+        this.finishQuiz()
         console.log("submit index: " + index)
         //send over to firebase
     }

@@ -8,7 +8,7 @@ const TimelineController = {
             lecture: "5678",
             type: "video",
             eventTime: 0,
-            resource: 'https://vyden.nyc3.digitaloceanspaces.com/videos/Why%20Alien%20Life%20Would%20be%20our%20Doom%20-%20The%20Great%20Filter.mp4',
+            resource: 'https://vyden.nyc3.digitaloceanspaces.com/videos/f47c423d-ca00-4ccf-a9ba-ca7a196394d8',
         },
         {
             id: "abc123",
@@ -23,7 +23,7 @@ const TimelineController = {
             lecture: "5678",
             type: "video",
             eventTime: 20000,
-            resource: 'https://vyden.nyc3.digitaloceanspaces.com/videos/Why%20Alien%20Life%20Would%20be%20our%20Doom%20-%20The%20Great%20Filter.mp4',
+            resource: 'https://vyden.nyc3.digitaloceanspaces.com/videos/f47c423d-ca00-4ccf-a9ba-ca7a196394d8',
         }]) 
     },
 
