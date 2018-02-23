@@ -23,6 +23,7 @@ const SceneController = {
             const videoURL = Timeline.getVideoFromTimeline(timeline)
             this.videoURL = videoURL
             $('#video').attr('src',this.videoURL)
+            $('#loading').remove()
             //listen for user to start scene
             this.userInitialized = false
             $(document).click(function() {
