@@ -123912,7 +123912,7 @@ const DataController = {
 
     submitAnswerForQuiz(quizID,answer) {
         const responseID = this.database.ref('Courses/' + this.courseID +'/lectures/lectureQuizResponses/' + this.lectureID).push().key
-        this.database.ref('Courses/hesgotapumpee/lectureQuizResponses/' + this.lectureID + '/' + responseID).set({
+        this.database.ref('Courses/' + this.courseID + '/lectureQuizResponses/' + this.lectureID + '/' + responseID).set({
             id: responseID,
             selection: answer,
             date: Date.now(),
