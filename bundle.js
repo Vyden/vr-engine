@@ -16988,7 +16988,7 @@ exports.WebSocketConnection = WebSocketConnection;
 
 
 }).call(this,require('_process'))
-},{"../core/stats/StatsManager":47,"../core/storage/storage":51,"../core/util/util":63,"./Constants":82,"@firebase/app":1,"@firebase/util":138,"_process":180}],85:[function(require,module,exports){
+},{"../core/stats/StatsManager":47,"../core/storage/storage":51,"../core/util/util":63,"./Constants":82,"@firebase/app":1,"@firebase/util":138,"_process":182}],85:[function(require,module,exports){
 "use strict";
 /**
  * Copyright 2017 Google Inc.
@@ -123830,7 +123830,25 @@ $(() => {
     SceneController.initScene()
 })
 
-},{"./data":170,"./dependencies":171,"./scene":174,"./stage":176,"./video":179}],170:[function(require,module,exports){
+},{"./data":171,"./dependencies":172,"./scene":176,"./stage":178,"./video":181}],170:[function(require,module,exports){
+const dependencies = require('./dependencies')
+const $ = dependencies.jquery
+
+const AssetsController = {
+        addAssetFromURL(url) {
+            const id = Math.random().toString(36).substring(5)
+            const asset = $(`<a-asset-item id="${id}" src="${url}"></a-asset-item>`)
+            $('a-assets').append(asset)
+            return id
+        },
+
+        removeAssetWithID(id) {
+            $(`a-asset-item#${id}`).remove()
+        }
+}
+
+module.exports = AssetsController
+},{"./dependencies":172}],171:[function(require,module,exports){
 const GetURLParam = require('get-url-param')
 const Firebase = require('firebase')
 const Secrets = require('./secrets')
@@ -123841,41 +123859,6 @@ const DataController = {
         this.getCourseIDFromURL()
         Firebase.initializeApp(Secrets.firebaseConfig)
         this.database = Firebase.database()
-    },
-
-    writeTestLecture() {
-        const lectureId = this.database.ref('Courses/hesgotapumpee/lectures/').push().key;
-        this.database.ref('Courses/hesgotapumpee/lectures/').set({
-            title: "How to browse the web with emacs",
-            course: "hesgotapumpee",
-            date : Date.now(),
-            sky: "default",
-            timeline: {
-                firstVideo: {
-                    id: "abc123",
-                    lecture: "5678",
-                    type: "video",
-                    eventTime: 0,
-                    resource: 'https://vyden.nyc3.digitaloceanspaces.com/videos/Why%20Alien%20Life%20Would%20be%20our%20Doom%20-%20The%20Great%20Filter.mp4',
-                },
-                thenQuiz: {
-                    id: "abc123",
-                    lecture: "5678",
-                    type: "quiz",
-                    eventTime: 10000,
-                    quizTime: 10000,
-                    resource: 'kurzquiz1',
-                },
-                finishVideo: {
-                    id: "abc123",
-                    lecture: "5678",
-                    type: "video",
-                    eventTime: 20000,
-                    resource: 'https://vyden.nyc3.digitaloceanspaces.com/videos/Why%20Alien%20Life%20Would%20be%20our%20Doom%20-%20The%20Great%20Filter.mp4',
-                }
-            },
-
-        });
     },
 
     getLectureIDFromURL() {
@@ -123895,21 +123878,29 @@ const DataController = {
                 eventTime: 0,
                 resource: 'https://vyden.nyc3.digitaloceanspaces.com/videos/33c685f7-3a35-4af8-adde-d13024e2c004',
             },
-            {
+            /*{
                 id: "abc123",
                 lecture: "5678",
                 type: "quiz",
                 eventTime: 10000,
                 quizTime: 10000,
                 resource: 'test',
+            },*/
+            {
+                id: "abc123",
+                lecture: "5678",
+                type: "model",
+                eventTime: 5000,
+                resource: 'https://vyden.nyc3.digitaloceanspaces.com/models/knuckles/scene.gltf',
             },
             {
                 id: "abc123",
                 lecture: "5678",
                 type: "video",
-                eventTime: 20000,
+                eventTime: 30000,
                 resource: 'https://vyden.nyc3.digitaloceanspaces.com/videos/33c685f7-3a35-4af8-adde-d13024e2c004',
             }]
+
             return callback(timeline)
         }
         this.database.ref('/Courses/' + this.courseID + '/lectures/' + this.lectureID).once('value').then(function(snapshot) {
@@ -123953,14 +123944,26 @@ const DataController = {
 }
 
 module.exports = DataController
-},{"./secrets":175,"firebase":158,"get-url-param":167}],171:[function(require,module,exports){
+},{"./secrets":177,"firebase":158,"get-url-param":167}],172:[function(require,module,exports){
 module.exports.jquery = require('jquery')
 module.exports.aframe = require('aframe')
 module.exports.htmlShader = require('aframe-html-shader')
 module.exports.videoControls = require('aframe-video-controls')
 module.exports.mouseCursor = require('aframe-mouse-cursor-component')
 module.exports.eventSet = require('aframe-event-set-component')
-},{"aframe":166,"aframe-event-set-component":162,"aframe-html-shader":163,"aframe-mouse-cursor-component":164,"aframe-video-controls":165,"jquery":168}],172:[function(require,module,exports){
+},{"aframe":166,"aframe-event-set-component":162,"aframe-html-shader":163,"aframe-mouse-cursor-component":164,"aframe-video-controls":165,"jquery":168}],173:[function(require,module,exports){
+const dependencies = require('./dependencies')
+const $ = dependencies.jquery
+
+const ModelController = {
+    getModelEntity(assetID,scaleFactor) {
+        const scale = scaleFactor * 0.01 || 0.01
+        return $(`<a-entity gltf-model="#${assetID}" scale="${scale} ${scale} ${scale}" position="0 10 0"></a-entity>`)
+    },
+}
+
+module.exports = ModelController
+},{"./dependencies":172}],174:[function(require,module,exports){
 const dependencies = require('./dependencies')
 const $ = dependencies.jquery
 
@@ -124014,7 +124017,7 @@ const PrimitiveObjectsController = {
 }
 
 module.exports = PrimitiveObjectsController
-},{"./dependencies":171}],173:[function(require,module,exports){
+},{"./dependencies":172}],175:[function(require,module,exports){
 const dependencies = require('./dependencies')
 const Util = require('./util')
 const $ = dependencies.jquery
@@ -124127,7 +124130,7 @@ AFRAME.registerComponent('cursor-listener', {
       });
     }
   });
-},{"./dependencies":171,"./util":178}],174:[function(require,module,exports){
+},{"./dependencies":172,"./util":180}],176:[function(require,module,exports){
 const dependencies = require('./dependencies')
 const Util = require('./util')
 const Timeline = require('./timeline')
@@ -124135,6 +124138,8 @@ const Stage = require('./stage')
 const Quiz = require('./quiz')
 const PrimitiveObjects = require('./primitiveObjects')
 const DataController = require('./data')
+const Model = require('./model')
+const Assets = require('./assets')
 const $ = dependencies.jquery
 
 const SceneController = {
@@ -124234,12 +124239,18 @@ const SceneController = {
             }.bind(this))
         } else if(this.currentItem.type === 'model') {
             console.log('load model')
+            const assetID = Assets.addAssetFromURL(this.currentItem.resource)
+            const modelEntity = Model.getModelEntity(assetID,0.01)
+            $(this.stage).append(modelEntity)
+            setTimeout(function() {
+                this.presentNext()
+            }.bind(this),eventTimeout + delta)
         }
     }
 }
 
 module.exports = SceneController
-},{"./data":170,"./dependencies":171,"./primitiveObjects":172,"./quiz":173,"./stage":176,"./timeline":177,"./util":178}],175:[function(require,module,exports){
+},{"./assets":170,"./data":171,"./dependencies":172,"./model":173,"./primitiveObjects":174,"./quiz":175,"./stage":178,"./timeline":179,"./util":180}],177:[function(require,module,exports){
 module.exports.firebaseConfig = {
     apiKey: "AIzaSyC36bqNl9kBjdmduam_qs-SmKcagNRPebU",
     authDomain: "vyden-backend.firebaseapp.com",
@@ -124248,7 +124259,7 @@ module.exports.firebaseConfig = {
     storageBucket: "vyden-backend.appspot.com",
     messagingSenderId: "714670541409"
 }
-},{}],176:[function(require,module,exports){
+},{}],178:[function(require,module,exports){
 const dependencies = require('./dependencies')
 const PrimitiveObjects = require('./primitiveObjects')
 const $ = dependencies.jquery
@@ -124272,7 +124283,7 @@ const StageController = {
 }
 
 module.exports = StageController
-},{"./dependencies":171,"./primitiveObjects":172}],177:[function(require,module,exports){
+},{"./dependencies":172,"./primitiveObjects":174}],179:[function(require,module,exports){
 const TimelineController = {
     getTimeline(lectureId,callback) {
         //retrieve timeline from Firebase
@@ -124321,7 +124332,7 @@ const TimelineController = {
 }
 
 module.exports = TimelineController
-},{}],178:[function(require,module,exports){
+},{}],180:[function(require,module,exports){
 const Utilities = {
     isMobile() {
         return (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))
@@ -124340,7 +124351,7 @@ const Utilities = {
 }
 
 module.exports = Utilities
-},{}],179:[function(require,module,exports){
+},{}],181:[function(require,module,exports){
 const dependencies = require('./dependencies')
 const PrimitiveObjects = require('./primitiveObjects')
 const $ = dependencies.jquery
@@ -124374,7 +124385,7 @@ const VideoController = {
 }
 
 module.exports = VideoController
-},{"./dependencies":171,"./primitiveObjects":172}],180:[function(require,module,exports){
+},{"./dependencies":172,"./primitiveObjects":174}],182:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 

@@ -5,6 +5,8 @@ const Stage = require('./stage')
 const Quiz = require('./quiz')
 const PrimitiveObjects = require('./primitiveObjects')
 const DataController = require('./data')
+const Model = require('./model')
+const Assets = require('./assets')
 const $ = dependencies.jquery
 
 const SceneController = {
@@ -104,6 +106,12 @@ const SceneController = {
             }.bind(this))
         } else if(this.currentItem.type === 'model') {
             console.log('load model')
+            const assetID = Assets.addAssetFromURL(this.currentItem.resource)
+            const modelEntity = Model.getModelEntity(assetID,0.01)
+            $(this.stage).append(modelEntity)
+            setTimeout(function() {
+                this.presentNext()
+            }.bind(this),eventTimeout + delta)
         }
     }
 }
