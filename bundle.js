@@ -124232,6 +124232,8 @@ const SceneController = {
                 this.currentItem.quiz = quiz
                 Quiz.controlQuiz(this)
             }.bind(this))
+        } else if(this.currentItem.type === 'model') {
+            console.log('load model')
         }
     }
 }
