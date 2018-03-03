@@ -43,11 +43,6 @@ const SceneController = {
         //set properties for desktop viewing
     },
 
-    loadData() {
-        
-
-    },
-
     userStartScene() {
         this.userInitialized = true
         $('#lecStart').remove()

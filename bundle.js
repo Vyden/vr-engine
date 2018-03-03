@@ -123837,8 +123837,6 @@ const Secrets = require('./secrets')
 
 const DataController = {
     intializeFirebase() {
-        // this.lectureID = '-L6-3jZDLPEdmPEH70jQ'
-        // this.courseID = 'hesgotapumpee'
         this.getLectureIDFromURL()
         this.getCourseIDFromURL()
         Firebase.initializeApp(Secrets.firebaseConfig)
@@ -123889,6 +123887,31 @@ const DataController = {
     },
 
     getTimelineFromFirebase(callback) {
+        if(this.lectureID === 'test') {
+            const timeline = [{
+                id: "abc123",
+                lecture: "5678",
+                type: "video",
+                eventTime: 0,
+                resource: 'https://vyden.nyc3.digitaloceanspaces.com/videos/62d96d60-6b7e-4e43-a9e3-be276fac6254',
+            },
+            {
+                id: "abc123",
+                lecture: "5678",
+                type: "quiz",
+                eventTime: 10000,
+                quizTime: 10000,
+                resource: 'test',
+            },
+            {
+                id: "abc123",
+                lecture: "5678",
+                type: "video",
+                eventTime: 20000,
+                resource: 'https://vyden.nyc3.digitaloceanspaces.com/videos/62d96d60-6b7e-4e43-a9e3-be276fac6254',
+            }]
+            return callback(timeline)
+        }
         this.database.ref('/Courses/' + this.courseID + '/lectures/' + this.lectureID).once('value').then(function(snapshot) {
             const lecture = snapshot.val()
             let timeline = []
@@ -123901,6 +123924,14 @@ const DataController = {
     },
 
     getQuizFromTimelineItem(timelineItem,callback) {
+        if(timelineItem.resource === 'test') {
+            //return fake quiz
+            return callback({
+                question: "Is JavaScript a good language?",
+                answers: ["Yes", "No"],
+                time: 10000
+            })
+        }
         this.database.ref('/Courses/' + this.courseID + '/quizzes/' + timelineItem.resource + '/').once('value').then(function(snapshot) {
             console.log("the quiz id:",timelineItem.resource)
             const quiz = snapshot.val()
@@ -124140,11 +124171,6 @@ const SceneController = {
         }.bind(this))
 
         //set properties for desktop viewing
-    },
-
-    loadData() {
-        
-
     },
 
     userStartScene() {
