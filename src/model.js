@@ -1,0 +1,6 @@
+const ModelController = {
+    getModelEntityFromAssetID(assetID) {
+
+    },
+
+}

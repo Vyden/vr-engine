@@ -123893,7 +123893,7 @@ const DataController = {
                 lecture: "5678",
                 type: "video",
                 eventTime: 0,
-                resource: 'https://vyden.nyc3.digitaloceanspaces.com/videos/62d96d60-6b7e-4e43-a9e3-be276fac6254',
+                resource: 'https://vyden.nyc3.digitaloceanspaces.com/videos/33c685f7-3a35-4af8-adde-d13024e2c004',
             },
             {
                 id: "abc123",
@@ -123908,7 +123908,7 @@ const DataController = {
                 lecture: "5678",
                 type: "video",
                 eventTime: 20000,
-                resource: 'https://vyden.nyc3.digitaloceanspaces.com/videos/62d96d60-6b7e-4e43-a9e3-be276fac6254',
+                resource: 'https://vyden.nyc3.digitaloceanspaces.com/videos/33c685f7-3a35-4af8-adde-d13024e2c004',
             }]
             return callback(timeline)
         }
