@@ -107,7 +107,7 @@ const SceneController = {
         } else if(this.currentItem.type === 'model') {
             console.log('load model')
             const assetID = Assets.addAssetFromURL(this.currentItem.resource)
-            const modelEntity = Model.getModelEntity(assetID,0.01)
+            const modelEntity = Model.getModelEntity(assetID,0.01,"90 0 0","0 6 8")
             $(this.stage).append(modelEntity)
             setTimeout(function() {
                 this.presentNext()
