@@ -123953,9 +123953,26 @@ module.exports.mouseCursor = require('aframe-mouse-cursor-component')
 module.exports.eventSet = require('aframe-event-set-component')
 },{"aframe":166,"aframe-event-set-component":162,"aframe-html-shader":163,"aframe-mouse-cursor-component":164,"aframe-video-controls":165,"jquery":168}],173:[function(require,module,exports){
 const dependencies = require('./dependencies')
+const Assets = require('./assets')
 const $ = dependencies.jquery
 
 const ModelController = {
+    getModelEntityFromTimelineItem(timelineItem) {
+        const angleX = timelineItem.angleX || 0
+        const angleY = timelineItem.angleY || 0
+        const angleZ = timelineItem.angleZ || 0
+        const rotation = `${angleX} ${angleY} ${angleZ}`
+        const posX = timelineItem.offsetX || 0
+        const posY = timelineItem.offsetY || 10
+        const posZ = timelineItem.offsetZ || 0
+        const position = `${posX} ${posY} ${posZ}`
+        //load assets on event for now, do preloading later
+        const assetID = Assets.addAssetFromURL(timelineItem.resource)
+        const scale = timelineItem.scale || 1
+        this.modelEntity = this.getModelEntity(assetID,scale,rotation,position)
+        return this.modelEntity
+    },
+
     getModelEntity(assetID,scaleFactor,rotation,position) {
         const pos = position || "0 10 0"
         const rot = rotation || "0 0 0"
@@ -123965,7 +123982,7 @@ const ModelController = {
 }
 
 module.exports = ModelController
-},{"./dependencies":172}],174:[function(require,module,exports){
+},{"./assets":170,"./dependencies":172}],174:[function(require,module,exports){
 const dependencies = require('./dependencies')
 const $ = dependencies.jquery
 
@@ -124241,9 +124258,8 @@ const SceneController = {
             }.bind(this))
         } else if(this.currentItem.type === 'model') {
             console.log('load model')
-            const assetID = Assets.addAssetFromURL(this.currentItem.resource)
-            const modelEntity = Model.getModelEntity(assetID,0.01,"90 0 0","0 6 8")
-            $(this.stage).append(modelEntity)
+            const entity = Model.getModelEntityFromTimelineItem(this.currentItem)
+            $(this.stage).append(entity)
             setTimeout(function() {
                 this.presentNext()
             }.bind(this),eventTimeout + delta)

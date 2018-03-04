@@ -1,4 +1,5 @@
 const dependencies = require('./dependencies')
+const Assets = require('./assets')
 const $ = dependencies.jquery
 
 const ModelController = {
@@ -7,9 +8,9 @@ const ModelController = {
         const angleY = timelineItem.angleY || 0
         const angleZ = timelineItem.angleZ || 0
         const rotation = `${angleX} ${angleY} ${angleZ}`
-        const posX = timeline.offsetX || 0
-        const posY = timeline.offsetY || 10
-        const posZ = timeline.offsetZ || 0
+        const posX = timelineItem.offsetX || 0
+        const posY = timelineItem.offsetY || 10
+        const posZ = timelineItem.offsetZ || 0
         const position = `${posX} ${posY} ${posZ}`
         //load assets on event for now, do preloading later
         const assetID = Assets.addAssetFromURL(timelineItem.resource)
