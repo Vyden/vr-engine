@@ -123891,6 +123891,9 @@ const DataController = {
                 lecture: "5678",
                 type: "model",
                 eventTime: 5000,
+                scale: 0.05,
+                angleX: 90,
+                offsetY: 5,
                 resource: 'https://vyden.nyc3.digitaloceanspaces.com/models/knuckles/scene.gltf',
             },
             {
