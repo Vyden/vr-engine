@@ -1,5 +1,6 @@
+const dependencies = require('./dependencies')
 const GetURLParam = require('get-url-param')
-const Firebase = require('firebase')
+const Firebase = firebase
 const Secrets = require('./secrets')
 
 const DataController = {
@@ -86,12 +87,13 @@ const DataController = {
 
     submitAnswerForQuiz(quizID,answer) {
         const responseID = this.database.ref('Courses/' + this.courseID +'/lectures/lectureQuizResponses/' + this.lectureID).push().key
+        console.log("this database",this.database)
         this.database.ref('Courses/' + this.courseID + '/lectureQuizResponses/' + this.lectureID + '/' + responseID).set({
             id: responseID,
             selection: answer,
             date: Date.now(),
             quiz: quizID,
-            user: firebase.auth().currentUser.uid,
+            // user: Firebase.auth.currentUser.uid,
             lecture: this.lectureID,
             course: this.courseID
         })

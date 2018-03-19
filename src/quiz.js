@@ -83,7 +83,8 @@ const QuizController = {
         clearTimeout(this.timeout)
         this.finishQuiz()
         console.log("submit index: " + index)
-        this.scene.DataController.submitAnswerForQuiz(this.scene.currentItem.resource,index)
+        console.log("this scene",this.scene)
+        this.scene.DataController.submitAnswerForQuiz(this.scene.lastItem.resource,index)
         //send over to firebase
     }
 
