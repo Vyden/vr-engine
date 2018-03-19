@@ -123942,6 +123942,7 @@ const DataController = {
             selection: answer,
             date: Date.now(),
             quiz: quizID,
+            user: firebase.auth().currentUser.uid,
             lecture: this.lectureID,
             course: this.courseID
         })
