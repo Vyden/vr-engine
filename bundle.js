@@ -123876,17 +123876,17 @@ const DataController = {
                 lecture: "5678",
                 type: "video",
                 eventTime: 0,
-                resource: 'https://vyden.nyc3.digitaloceanspaces.com/videos/33c685f7-3a35-4af8-adde-d13024e2c004',
+                resource: 'https://vyden.nyc3.digitaloceanspaces.com/videos/ad8c2091-ff26-4a12-bf64-bf4fe8cd75c5',
             },
-            /*{
+            {
                 id: "abc123",
                 lecture: "5678",
                 type: "quiz",
                 eventTime: 10000,
                 quizTime: 10000,
                 resource: 'test',
-            },*/
-            {
+            },
+            /*{
                 id: "abc123",
                 lecture: "5678",
                 type: "model",
@@ -123895,13 +123895,13 @@ const DataController = {
                 angleX: 90,
                 offsetY: 5,
                 resource: 'https://vyden.nyc3.digitaloceanspaces.com/models/knuckles/scene.gltf',
-            },
+            },*/
             {
                 id: "abc123",
                 lecture: "5678",
                 type: "video",
-                eventTime: 30000,
-                resource: 'https://vyden.nyc3.digitaloceanspaces.com/videos/33c685f7-3a35-4af8-adde-d13024e2c004',
+                eventTime: 7000,
+                resource: 'https://vyden.nyc3.digitaloceanspaces.com/videos/ad8c2091-ff26-4a12-bf64-bf4fe8cd75c5',
             }]
 
             return callback(timeline)
@@ -123941,8 +123941,14 @@ const DataController = {
             id: responseID,
             selection: answer,
             date: Date.now(),
-            quiz: quizID
+            quiz: quizID,
+            lecture: this.lectureID,
+            course: this.courseID
         })
+    },
+
+    preloadAssetsForTimeline(timeline,callback) {
+        
     }
 }
 
