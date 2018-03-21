@@ -94,7 +94,8 @@ const DataController = {
             quiz: quizID,
             user: Firebase.auth().currentUser.uid,
             lecture: this.lectureID,
-            course: this.courseID
+            course: this.courseID,
+            correct: -1
         })
     },
 

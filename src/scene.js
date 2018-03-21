@@ -28,8 +28,12 @@ const SceneController = {
             $('#loading').remove()
             //listen for user to start scene
             this.userInitialized = false
-            $(document).click(function() {
-                if(!this.userInitialized) this.userStartScene()
+            document.addEventListener("click",function() {
+                if(!this.userInitialized) {
+                    document.getElementById('video').play()
+                    document.getElementById('video').pause()
+                    this.userStartScene()
+                }
             }.bind(this))
             if(!Util.isMobile()) {
                 $('#lecStart').attr('value','Click anywhere to\n start the lecture...')
@@ -48,9 +52,6 @@ const SceneController = {
     userStartScene() {
         this.userInitialized = true
         $('#lecStart').remove()
-
-        document.getElementById('video').play()
-        document.getElementById('video').pause()
 
         if(Util.isMobile()) {
             setTimeout(function() {

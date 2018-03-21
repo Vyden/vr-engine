@@ -9,7 +9,6 @@
     "build": "./build.sh"
   },
   "dependencies": {
-    "aframe": "^0.7.1",
     "aframe-draw-component": "^1.5.0",
     "aframe-event-set-component": "^4.0.1",
     "aframe-html-shader": "^0.2.0",
