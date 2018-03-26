@@ -35496,7 +35496,7 @@ const DataController = {
         this.courseID = GetURLParam(window.location.href,'course')
     },
 
-    getTimelineFromFirebase(callback) {
+    getLectureAndTimelineFromFirebase(callback) {
         if(this.lectureID === 'test') {
             const timeline = [{
                 id: "abc123",
@@ -35541,7 +35541,7 @@ const DataController = {
                 lecture.timeline[key].eventTime *= 1000
                 timeline.push(lecture.timeline[key])
             })
-            callback(timeline)
+            callback(timeline,lecture)
         })
     },
 
@@ -35860,7 +35860,8 @@ const SceneController = {
 
         this.DataController = DataController
         DataController.intializeFirebase()
-        DataController.getTimelineFromFirebase(function(timeline) {
+        DataController.getLectureAndTimelineFromFirebase(function(timeline,lecture) {
+            console.log("got lecture",lecture)
             console.log("got timeline",timeline)
             this.timeline = timeline
             this.stage = document.getElementById('stage')

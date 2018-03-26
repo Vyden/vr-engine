@@ -19,7 +19,7 @@ const DataController = {
         this.courseID = GetURLParam(window.location.href,'course')
     },
 
-    getTimelineFromFirebase(callback) {
+    getLectureAndTimelineFromFirebase(callback) {
         if(this.lectureID === 'test') {
             const timeline = [{
                 id: "abc123",
@@ -64,7 +64,7 @@ const DataController = {
                 lecture.timeline[key].eventTime *= 1000
                 timeline.push(lecture.timeline[key])
             })
-            callback(timeline)
+            callback(timeline,lecture)
         })
     },
 

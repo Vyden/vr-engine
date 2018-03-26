@@ -17,7 +17,8 @@ const SceneController = {
 
         this.DataController = DataController
         DataController.intializeFirebase()
-        DataController.getTimelineFromFirebase(function(timeline) {
+        DataController.getLectureAndTimelineFromFirebase(function(timeline,lecture) {
+            console.log("got lecture",lecture)
             console.log("got timeline",timeline)
             this.timeline = timeline
             this.stage = document.getElementById('stage')
