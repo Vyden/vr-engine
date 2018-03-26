@@ -12,6 +12,7 @@
     "aframe-draw-component": "^1.5.0",
     "aframe-event-set-component": "^4.0.1",
     "aframe-html-shader": "^0.2.0",
+    "aframe-inspector": "^0.8.0",
     "aframe-mouse-cursor-component": "^0.5.2",
     "aframe-textwrap-component": "^1.0.1",
     "aframe-video-controls": "^0.3.0",

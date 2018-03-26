@@ -108,10 +108,13 @@ const SceneController = {
         } else if(this.currentItem.type === 'model') {
             console.log('load model')
             const entity = Model.getModelEntityFromTimelineItem(this.currentItem)
+            entity.append(Model.createRotationAnimation(this.currentItem))
+            this.currentItem.duration *= 1000
             $(this.stage).append(entity)
-            setTimeout(function() {
-                this.presentNext()
-            }.bind(this),eventTimeout + delta)
+            // setTimeout(function() {
+            //     this.presentNext()
+            // }.bind(this),this.currentItem.duration + delta)
+            Model.controlModel(this)
         }
     }
 }

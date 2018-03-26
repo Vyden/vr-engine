@@ -28,15 +28,15 @@ const DataController = {
                 eventTime: 0,
                 resource: 'https://vyden.nyc3.digitaloceanspaces.com/videos/ad8c2091-ff26-4a12-bf64-bf4fe8cd75c5',
             },
+            // {
+            //     id: "abc123",
+            //     lecture: "5678",
+            //     type: "quiz",
+            //     eventTime: 10000,
+            //     quizTime: 10000,
+            //     resource: 'test',
+            // },
             {
-                id: "abc123",
-                lecture: "5678",
-                type: "quiz",
-                eventTime: 10000,
-                quizTime: 10000,
-                resource: 'test',
-            },
-            /*{
                 id: "abc123",
                 lecture: "5678",
                 type: "model",
@@ -44,8 +44,9 @@ const DataController = {
                 scale: 0.05,
                 angleX: 90,
                 offsetY: 5,
+                duration: 10,
                 resource: 'https://vyden.nyc3.digitaloceanspaces.com/models/knuckles/scene.gltf',
-            },*/
+            },
             {
                 id: "abc123",
                 lecture: "5678",
