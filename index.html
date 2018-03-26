@@ -7,6 +7,33 @@
     <script src="https://rawgit.com/aframevr/aframe/417aaac/dist/aframe-master.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/4.10.1/firebase.js"></script>
     <script src="bundle.js"></script>
+    <style>
+      #exitBtn {
+        background: rgba(0,0,0,.35);
+        color: #FFF;
+        border: 0;
+        bottom: 0;
+        cursor: pointer;
+        min-width: 50px;
+        min-height: 30px;
+        padding: 1%;
+        position: absolute;
+        left: 0;
+        transition: background-color .05s ease;
+        -webkit-transition: background-color .05s ease;
+        z-index: 9999;
+        font-family: sans-serif,monospace;
+        font-size: 20px !important;
+      }
+
+      #exitVR {
+        width: 100%;
+        font-weight: 200;
+        position: absolute;
+        left: 20px;
+        bottom: 20px;
+      }
+    </style>
   </head>
   <body>
       <a-scene vr-mode-ui cursor="rayOrigin: mouse">
@@ -41,7 +68,9 @@
           <!-- Ground. -->
           <a-circle src="#groundTexture" rotation="-90 0 0" position="0 0.1 0" radius="100"></a-circle>
           
-          
+          <div id="exitVR">
+            <button id="exitBtn">Exit</button>
+          </div>
         </a-scene>
   </body>
 </html>

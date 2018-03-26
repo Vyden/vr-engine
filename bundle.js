@@ -35877,6 +35877,9 @@ const SceneController = {
                 $('#mainCamera').removeAttr('look-controls')
                 $(document).css('cursor','pointer !important')
             }
+            $('#exitBtn').click(function() {
+                window.history.back();
+            });
             $('#lecStart').attr('visible',true)
 
         }.bind(this))
