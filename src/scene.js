@@ -36,8 +36,8 @@ const SceneController = {
                 }
             }.bind(this))
             if(!Util.isMobile()) {
+                $('.a-enter-vr').remove()
                 $('#lecStart').attr('value','Click anywhere to\n start the lecture...')
-                $('.a-enter-vr').hide()
                 $('#videoPlane').attr('position','0 10 16')
                 $('#mainCamera').removeAttr('look-controls')
                 $(document).css('cursor','pointer !important')
@@ -53,6 +53,7 @@ const SceneController = {
     },
 
     userStartScene() {
+        $('.a-enter-vr').hide();
         this.userInitialized = true
         $('#lecStart').remove()
 

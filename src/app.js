@@ -13,4 +13,12 @@ document.currentScene = SceneController;
 
 $(() => {
     SceneController.initScene()
+
+    document.querySelector('a-scene').addEventListener('enter-vr', function () {
+        $('#exitBtn').hide();
+    });
+
+    document.querySelector('a-scene').addEventListener('enter-vr', function () {
+        $('#exitBtn').show();
+    });
 })

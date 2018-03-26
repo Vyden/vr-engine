@@ -35446,6 +35446,14 @@ document.currentScene = SceneController;
 
 $(() => {
     SceneController.initScene()
+
+    document.querySelector('a-scene').addEventListener('enter-vr', function () {
+        $('#exitBtn').hide();
+    });
+
+    document.querySelector('a-scene').addEventListener('enter-vr', function () {
+        $('#exitBtn').show();
+    });
 })
 
 },{"./data":122,"./dependencies":123,"./scene":127,"./stage":129,"./video":132}],121:[function(require,module,exports){
@@ -35871,8 +35879,8 @@ const SceneController = {
                 }
             }.bind(this))
             if(!Util.isMobile()) {
+                $('.a-enter-vr').remove()
                 $('#lecStart').attr('value','Click anywhere to\n start the lecture...')
-                $('.a-enter-vr').hide()
                 $('#videoPlane').attr('position','0 10 16')
                 $('#mainCamera').removeAttr('look-controls')
                 $(document).css('cursor','pointer !important')
@@ -35888,6 +35896,7 @@ const SceneController = {
     },
 
     userStartScene() {
+        $('.a-enter-vr').hide();
         this.userInitialized = true
         $('#lecStart').remove()
 
