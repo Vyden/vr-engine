@@ -35615,24 +35615,28 @@ const ModelController = {
     },
 
     createRotationAnimation(timelineItem) {
-        if(timelineItem.rotation != -1 && timelineItem.rotation != 1) return null;
-        if(!rotAxis) return null;
-        const rotDir = parseInt(timelineItem.rotation)
+        console.log("create rotation",timelineItem)
+        // if(timelineItem.rotation != -1 || timelineItem.rotation != 1) return null;
+        // if(!timelineItem.rotateAxis) return null;
+        const rotDir = parseInt(timelineItem.rotate)
+        console.log("rotDir",rotDir)
         const rotAxis = timelineItem.rotateAxis
         const rotVal = rotDir * 360
         let rotStr = '';
         if(rotAxis == 'x') {
-            rotStr = `${rotVal} 0 0`
+            rotStr = `${rotVal} ${timelineItem.angleY} ${timelineItem.angleZ}`
         } else if(rotAxis == 'y') {
-            rotStr = `0 ${rotVal} 0`
+            rotStr = `${timelineItem.angleX} ${rotVal} ${timelineItem.angleZ}`
         } else {
-            rotStr = `0 0 ${rotVal}`
+            rotStr = `${timelineItem.angleX} ${timelineItem.angleY} ${rotVal}`
         }
         let fill = 'forwards'
         if(rotDir == 1) {
             fill = 'backwards'
         }
-        return $(`<a-animation attribute="rotation" dur="2000" to="${rotStr}" repeat="indefinite" easing="linear" fill="${fill}"></a-animation>`)
+        const tag = `<a-animation attribute="rotation" dur="2000" to="${rotStr}" repeat="indefinite" easing="linear" fill="${fill}"></a-animation>`
+        console.log("create tag",tag);
+        return $(tag)
     },
 
     controlModel(scene) {
