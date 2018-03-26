@@ -35616,8 +35616,8 @@ const ModelController = {
 
     createRotationAnimation(timelineItem) {
         console.log("create rotation",timelineItem)
-        // if(timelineItem.rotation != -1 || timelineItem.rotation != 1) return null;
-        // if(!timelineItem.rotateAxis) return null;
+        if(timelineItem.rotate != -1 && timelineItem.rotate != 1) return null;
+        if(!timelineItem.rotateAxis) return null;
         const rotDir = parseInt(timelineItem.rotate)
         console.log("rotDir",rotDir)
         const rotAxis = timelineItem.rotateAxis
