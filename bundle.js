@@ -16884,7 +16884,7 @@ exports.WebSocketConnection = WebSocketConnection;
 
 
 }).call(this,require('_process'))
-},{"../core/stats/StatsManager":47,"../core/storage/storage":51,"../core/util/util":63,"./Constants":82,"@firebase/app":1,"@firebase/util":93,"_process":133}],85:[function(require,module,exports){
+},{"../core/stats/StatsManager":47,"../core/storage/storage":51,"../core/util/util":63,"./Constants":82,"@firebase/app":1,"@firebase/util":93,"_process":134}],85:[function(require,module,exports){
 "use strict";
 /**
  * Copyright 2017 Google Inc.
@@ -35456,7 +35456,7 @@ $(() => {
     });
 })
 
-},{"./data":122,"./dependencies":123,"./scene":127,"./stage":129,"./video":132}],121:[function(require,module,exports){
+},{"./data":122,"./dependencies":123,"./scene":127,"./stage":130,"./video":133}],121:[function(require,module,exports){
 const dependencies = require('./dependencies')
 const $ = dependencies.jquery
 
@@ -35840,7 +35840,7 @@ AFRAME.registerComponent('cursor-listener', {
       });
     }
   });
-},{"./dependencies":123,"./util":131}],127:[function(require,module,exports){
+},{"./dependencies":123,"./util":132}],127:[function(require,module,exports){
 const dependencies = require('./dependencies')
 const Util = require('./util')
 const Timeline = require('./timeline')
@@ -35850,6 +35850,7 @@ const PrimitiveObjects = require('./primitiveObjects')
 const DataController = require('./data')
 const Model = require('./model')
 const Assets = require('./assets')
+const Sky = require('./sky')
 const $ = dependencies.jquery
 
 const SceneController = {
@@ -35863,6 +35864,7 @@ const SceneController = {
         DataController.getLectureAndTimelineFromFirebase(function(timeline,lecture) {
             console.log("got lecture",lecture)
             console.log("got timeline",timeline)
+            Sky.renderSky(lecture)
             this.timeline = timeline
             this.stage = document.getElementById('stage')
             //set video for the scene
@@ -35968,7 +35970,7 @@ const SceneController = {
 }
 
 module.exports = SceneController
-},{"./assets":121,"./data":122,"./dependencies":123,"./model":124,"./primitiveObjects":125,"./quiz":126,"./stage":129,"./timeline":130,"./util":131}],128:[function(require,module,exports){
+},{"./assets":121,"./data":122,"./dependencies":123,"./model":124,"./primitiveObjects":125,"./quiz":126,"./sky":129,"./stage":130,"./timeline":131,"./util":132}],128:[function(require,module,exports){
 module.exports.firebaseConfig = {
     apiKey: "AIzaSyC36bqNl9kBjdmduam_qs-SmKcagNRPebU",
     authDomain: "vyden-backend.firebaseapp.com",
@@ -35978,6 +35980,21 @@ module.exports.firebaseConfig = {
     messagingSenderId: "714670541409"
 }
 },{}],129:[function(require,module,exports){
+const dependencies = require('./dependencies')
+const $ = dependencies.jquery
+
+const SkyController = {
+    renderSky(lecture) {
+        if(lecture.sky.charAt(0) === '#') {
+            $('a-sky').removeAttr('src')
+            $('a-sky').attr('color',lecture.sky)
+            $('ground').remove()
+        }
+    }
+}
+
+module.exports = SkyController
+},{"./dependencies":123}],130:[function(require,module,exports){
 const dependencies = require('./dependencies')
 const PrimitiveObjects = require('./primitiveObjects')
 const $ = dependencies.jquery
@@ -36001,7 +36018,7 @@ const StageController = {
 }
 
 module.exports = StageController
-},{"./dependencies":123,"./primitiveObjects":125}],130:[function(require,module,exports){
+},{"./dependencies":123,"./primitiveObjects":125}],131:[function(require,module,exports){
 const TimelineController = {
     getTimeline(lectureId,callback) {
         //retrieve timeline from Firebase
@@ -36050,7 +36067,7 @@ const TimelineController = {
 }
 
 module.exports = TimelineController
-},{}],131:[function(require,module,exports){
+},{}],132:[function(require,module,exports){
 const Utilities = {
     isMobile() {
         return (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))
@@ -36069,7 +36086,7 @@ const Utilities = {
 }
 
 module.exports = Utilities
-},{}],132:[function(require,module,exports){
+},{}],133:[function(require,module,exports){
 const dependencies = require('./dependencies')
 const PrimitiveObjects = require('./primitiveObjects')
 const $ = dependencies.jquery
@@ -36103,7 +36120,7 @@ const VideoController = {
 }
 
 module.exports = VideoController
-},{"./dependencies":123,"./primitiveObjects":125}],133:[function(require,module,exports){
+},{"./dependencies":123,"./primitiveObjects":125}],134:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 

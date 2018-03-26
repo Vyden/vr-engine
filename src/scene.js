@@ -7,6 +7,7 @@ const PrimitiveObjects = require('./primitiveObjects')
 const DataController = require('./data')
 const Model = require('./model')
 const Assets = require('./assets')
+const Sky = require('./sky')
 const $ = dependencies.jquery
 
 const SceneController = {
@@ -20,6 +21,7 @@ const SceneController = {
         DataController.getLectureAndTimelineFromFirebase(function(timeline,lecture) {
             console.log("got lecture",lecture)
             console.log("got timeline",timeline)
+            Sky.renderSky(lecture)
             this.timeline = timeline
             this.stage = document.getElementById('stage')
             //set video for the scene
