@@ -56,7 +56,6 @@ const SceneController = {
     },
 
     userStartScene() {
-        $('.a-enter-vr').hide();
         this.userInitialized = true
         $('#lecStart').remove()
 
