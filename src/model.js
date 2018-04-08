@@ -15,15 +15,20 @@ const ModelController = {
         //load assets on event for now, do preloading later
         const assetID = Assets.addAssetFromURL(timelineItem.resource)
         const scale = timelineItem.scale || 1
-        this.modelEntity = this.getModelEntity(assetID,scale,rotation,position)
+        const audio = timelineItem.audio || null
+        this.modelEntity = this.getModelEntity(assetID,scale,rotation,position,audio)
         return this.modelEntity
     },
 
-    getModelEntity(assetID,scaleFactor,rotation,position) {
+    getModelEntity(assetID,scaleFactor,rotation,position,audio) {
         const pos = position || "0 10 0"
         const rot = rotation || "0 0 0"
         const scale = scaleFactor * 0.01 || 0.01
-        return $(`<a-entity gltf-model="#${assetID}" scale="${scale} ${scale} ${scale}" position="${position}" rotation="${rotation}"></a-entity>`)
+        let audioStr = ""
+        if(audio != null) {
+            audioStr = `sound="src: url(${audio}); autoplay: true; volume: 8"`
+        }
+        return $(`<a-entity gltf-model="#${assetID}" scale="${scale} ${scale} ${scale}" position="${position}" rotation="${rotation}" ${audioStr}></a-entity>`)
     },
 
     createRotationAnimation(timelineItem) {
