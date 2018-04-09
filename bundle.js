@@ -35839,7 +35839,8 @@ AFRAME.registerComponent('cursor-listener', {
         console.log(document.currentScene.currentItem)
 
       });
-      this.el.addEventListener('mouseEnter', function (event) {
+      this.el.addEventListener('mouseenter', function (event) {
+        console.log("mouse enter!")
         lastIndex = (lastIndex + 1) % COLORS.length;
         this.setAttribute('material', 'color', COLORS[lastIndex]);
       });
