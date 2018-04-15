@@ -35734,6 +35734,7 @@ module.exports = PrimitiveObjectsController
 },{"./dependencies":123}],126:[function(require,module,exports){
 const dependencies = require('./dependencies')
 const Util = require('./util')
+const Stage = require('./stage')
 const $ = dependencies.jquery
 
 const QuizController = {
@@ -35790,6 +35791,17 @@ const QuizController = {
         return entity
     },
 
+    generateSubmitAnimation(ansLetter) {
+        const circle = $(`#ans-${ansLetter}`)
+        console.log('circle letter',ansLetter)
+        const pos = circle.attr('position')
+        const animation = `
+            <a-animation attribute="position" dur="1500" from="${pos.x} ${pos.y} ${pos.z}" to="${pos.x} 50 ${pos.z}"></a-animation>
+        `
+        const animationEl = $(animation)
+        circle.append(animationEl)
+    },
+
     controlQuiz(scene) {
         this.scene = scene
         this.quiz = scene.currentItem.quiz
@@ -35815,10 +35827,16 @@ const QuizController = {
         this.scene.presentNext()
     },
 
-    submitAnswer(index) {
+    submitAnswer(index,element) {
+        if(this.answer) return
         this.answer = index;
         clearTimeout(this.timeout)
-        this.finishQuiz()
+        let ansLetterASCII = 65 + index;
+        const ansLetter = String.fromCharCode(ansLetterASCII)
+        this.generateSubmitAnimation(ansLetter)
+        setTimeout(function() {
+            this.finishQuiz()
+        }.bind(this),2000)
         console.log("submit index: " + index)
         console.log("this scene",this.scene)
         this.scene.DataController.submitAnswerForQuiz(this.scene.lastItem.resource,index)
@@ -35838,7 +35856,7 @@ AFRAME.registerComponent('cursor-listener', {
         // this.setAttribute('material', 'color', COLORS[lastIndex]);
         const quiz = document.currentScene.currentItem
         console.log("ans " + event.target.dataset.ans)
-        quiz.controller.submitAnswer(parseInt(event.target.dataset.ans))
+        quiz.controller.submitAnswer(parseInt(event.target.dataset.ans),this.el)
         console.log(document.currentScene.currentItem)
       });
     //   this.el.addEventListener('mouseenter', function (event) {
@@ -35848,7 +35866,7 @@ AFRAME.registerComponent('cursor-listener', {
     //   });
     }
   });
-},{"./dependencies":123,"./util":132}],127:[function(require,module,exports){
+},{"./dependencies":123,"./stage":130,"./util":132}],127:[function(require,module,exports){
 const dependencies = require('./dependencies')
 const Util = require('./util')
 const Timeline = require('./timeline')
