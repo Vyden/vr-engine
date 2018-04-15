@@ -35775,9 +35775,9 @@ const QuizController = {
         Object.keys(quiz.answers).forEach((index) => {
             const ansLetter = String.fromCharCode(ansLetterASCII)
             const ansCircle = `
-                <a-circle id="ans-${ansLetter}" data-ans="${index}" position="${currentPos} 8 0" rotation="0 0 0" radius="2" color="${Util.colorForIndex(index)}" cursor-listener
+                <a-circle id="ans-${ansLetter}" data-ans="${index}" position="${currentPos} 8 0" rotation="0 0 0" radius="2" color="${Util.colorForIndex(index)}" ${Util.isMobile() ? "" : "mouse-cursor"} cursor-listener
                 event-set__enter="_event: mouseenter; scale: 1.25 1.25 1.25"
-                event-set__leave="_event: mouseleave; scale: 1 1 1"
+                event-set__leave="_event: mouseleave; scale: 1 1 1"f
                 >
                     <a-text value="${ansLetter}" width="50" align="center">
                 </a-circle>
@@ -35841,11 +35841,11 @@ AFRAME.registerComponent('cursor-listener', {
         quiz.controller.submitAnswer(parseInt(event.target.dataset.ans))
         console.log(document.currentScene.currentItem)
       });
-      this.el.addEventListener('mouseenter', function (event) {
-        console.log("mouse enter!")
-        lastIndex = (lastIndex + 1) % COLORS.length;
-        this.setAttribute('material', 'color', COLORS[lastIndex]);
-      });
+    //   this.el.addEventListener('mouseenter', function (event) {
+    //     console.log("mouse enter!")
+    //     lastIndex = (lastIndex + 1) % COLORS.length;
+    //     this.setAttribute('material', 'color', COLORS[lastIndex]);
+    //   });
     }
   });
 },{"./dependencies":123,"./util":132}],127:[function(require,module,exports){
