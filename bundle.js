@@ -35828,22 +35828,21 @@ module.exports = QuizController
 
 AFRAME.registerComponent('cursor-listener', {
     init: function () {
-      var lastIndex = -1;
-      var COLORS = ['red', 'green', 'blue'];
+      //var lastIndex = -1;
+      //var COLORS = ['red', 'green', 'blue'];
       this.el.addEventListener('click', function (event) {
-        lastIndex = (lastIndex + 1) % COLORS.length;
-        this.setAttribute('material', 'color', COLORS[lastIndex]);
+        // lastIndex = (lastIndex + 1) % COLORS.length;
+        // this.setAttribute('material', 'color', COLORS[lastIndex]);
         const quiz = document.currentScene.currentItem
         console.log("ans " + event.target.dataset.ans)
         quiz.controller.submitAnswer(parseInt(event.target.dataset.ans))
         console.log(document.currentScene.currentItem)
-
       });
-      this.el.addEventListener('mouseenter', function (event) {
-        console.log("mouse enter!")
-        lastIndex = (lastIndex + 1) % COLORS.length;
-        this.setAttribute('material', 'color', COLORS[lastIndex]);
-      });
+    //   this.el.addEventListener('mouseenter', function (event) {
+    //     console.log("mouse enter!")
+    //     lastIndex = (lastIndex + 1) % COLORS.length;
+    //     this.setAttribute('material', 'color', COLORS[lastIndex]);
+    //   });
     }
   });
 },{"./dependencies":123,"./util":132}],127:[function(require,module,exports){
@@ -35892,6 +35891,7 @@ const SceneController = {
                 $('#lecStart').attr('value','Click anywhere to\n start the lecture...')
                 $('#videoPlane').attr('position','0 10 16')
                 $('#mainCamera').removeAttr('look-controls')
+                $('a-scene').attr('cursor','rayOrigin: mouse')
                 $(document).css('cursor','pointer !important')
             }
             $('#exitBtn').click(function() {

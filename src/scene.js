@@ -43,6 +43,7 @@ const SceneController = {
                 $('#lecStart').attr('value','Click anywhere to\n start the lecture...')
                 $('#videoPlane').attr('position','0 10 16')
                 $('#mainCamera').removeAttr('look-controls')
+                $('a-scene').attr('cursor','rayOrigin: mouse')
                 $(document).css('cursor','pointer !important')
             }
             $('#exitBtn').click(function() {

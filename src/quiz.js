@@ -41,7 +41,7 @@ const QuizController = {
         Object.keys(quiz.answers).forEach((index) => {
             const ansLetter = String.fromCharCode(ansLetterASCII)
             const ansCircle = `
-                <a-circle id="ans-${ansLetter}" data-ans="${index}" position="${currentPos} 8 0" rotation="0 0 0" radius="2" color="${Util.colorForIndex(index)}" mouse-cursor cursor-listener>
+                <a-circle id="ans-${ansLetter}" data-ans="${index}" position="${currentPos} 8 0" rotation="0 0 0" radius="2" color="${Util.colorForIndex(index)}" cursor-listener>
                     <a-text value="${ansLetter}" width="50" align="center">
                 </a-circle>
             `
@@ -94,21 +94,20 @@ module.exports = QuizController
 
 AFRAME.registerComponent('cursor-listener', {
     init: function () {
-      var lastIndex = -1;
-      var COLORS = ['red', 'green', 'blue'];
+      //var lastIndex = -1;
+      //var COLORS = ['red', 'green', 'blue'];
       this.el.addEventListener('click', function (event) {
-        lastIndex = (lastIndex + 1) % COLORS.length;
-        this.setAttribute('material', 'color', COLORS[lastIndex]);
+        // lastIndex = (lastIndex + 1) % COLORS.length;
+        // this.setAttribute('material', 'color', COLORS[lastIndex]);
         const quiz = document.currentScene.currentItem
         console.log("ans " + event.target.dataset.ans)
         quiz.controller.submitAnswer(parseInt(event.target.dataset.ans))
         console.log(document.currentScene.currentItem)
-
       });
-      this.el.addEventListener('mouseenter', function (event) {
-        console.log("mouse enter!")
-        lastIndex = (lastIndex + 1) % COLORS.length;
-        this.setAttribute('material', 'color', COLORS[lastIndex]);
-      });
+    //   this.el.addEventListener('mouseenter', function (event) {
+    //     console.log("mouse enter!")
+    //     lastIndex = (lastIndex + 1) % COLORS.length;
+    //     this.setAttribute('material', 'color', COLORS[lastIndex]);
+    //   });
     }
   });

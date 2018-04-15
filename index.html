@@ -36,14 +36,14 @@
     </style>
   </head>
   <body>
-      <a-scene vr-mode-ui cursor="rayOrigin: mouse">
+      <a-scene vr-mode-ui>
           <a-assets>
             <img id="groundTexture" src="https://cdn.aframe.io/a-painter/images/floor.jpg" crossorigin="anonymous">
             <img id="skyTexture" src="https://cdn.aframe.io/a-painter/images/sky.jpg" crossorigin="anonymous">
             <video id="video"></video>
           </a-assets>
     
-          <a-entity id="mainCamera" camera look-controls mouse-cursor position="0 10 0">
+          <a-entity id="mainCamera" camera look-controls position="0 10 0">
             <a-text id="lecStart" value="Tap anywhere to\n start lecture..." position="0 0 -1.5" align="center"></a-text>
           </a-entity>
           
