@@ -35726,6 +35726,9 @@ const PrimitiveObjectsController = {
             position="0 0 -1"
             geometry="primitive: ring; radiusInner: 0.02; radiusOuter: 0.03"
             material="color: #B3E5FC; shader: flat">
+                <a-animation begin="cursor-fusing" easing="ease-in" attribute="scale" dur="2000" 
+                fill="backwards" from="1 1 1" to="0.1 0.1 0.1"></a-animation>
+            </a-entity>
         `)
     }
 }
