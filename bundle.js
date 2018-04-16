@@ -35941,6 +35941,16 @@ const SceneController = {
         }
     },
 
+    pauseVideo() {
+        const currentTime = Date.now()
+        const elapsed = this.videoStart - currentTime
+        const ms = elapsed.getMilliseconds()
+        const remainingTime = this.videoItemDuration - ms
+        console.log("remaining time",remainingTime)
+        document.getElementById('video').pause()
+        clearTimeout(this.videoTimeout)
+    },
+
     presentNext() {
         //delta for handling time errors
         const delta = 500;
@@ -35965,7 +35975,9 @@ const SceneController = {
             setTimeout(function() {
                 document.getElementById('video').play()
                 //set timeout for next item
-                setTimeout(function() {
+                this.videoStart = Date.now()
+                this.videoItemDuration = eventTimeout
+                this.videoTimeout = setTimeout(function() {
                     document.getElementById('video').pause()
                     this.presentNext()
                 }.bind(this),eventTimeout + delta)
