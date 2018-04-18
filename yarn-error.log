@@ -1,5 +1,5 @@
 Arguments: 
-  /usr/bin/node /usr/bin/yarn add subtitle-parser
+  /usr/bin/node /usr/bin/yarn bundle
 
 PATH: 
   /home/matin/bin:/home/matin/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
@@ -35,6 +35,7 @@ npm manifest:
       "firebase": "^4.11.0",
       "get-url-param": "^1.0.1",
       "jquery": "^3.3.1",
+      "parse-srt": "^1.0.0-alpha",
       "watchify": "^3.11.0"
     }
   }
@@ -2749,6 +2750,10 @@ Lockfile:
     dependencies:
       error-ex "^1.2.0"
   
+  parse-srt@^1.0.0-alpha:
+    version "1.0.0-alpha"
+    resolved "https://registry.yarnpkg.com/parse-srt/-/parse-srt-1.0.0-alpha.tgz#85e3c60d31e4dd0924faf541ea85a188fc344f61"
+  
   parsejson@0.0.3:
     version "0.0.3"
     resolved "https://registry.yarnpkg.com/parsejson/-/parsejson-0.0.3.tgz#ab7e3759f209ece99437973f7d0f1f64ae0e64ab"
@@ -3932,11 +3937,17 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/yeast/-/yeast-0.1.2.tgz#008e06d8094320c372dbc2f8ed76a0ca6c8ac419"
 
 Trace: 
-  Error: Couldn't find package "subtitle-parser" on the "npm" registry.
-      at new MessageError (/usr/lib/node_modules/yarn/lib/cli.js:186:110)
-      at NpmResolver.<anonymous> (/usr/lib/node_modules/yarn/lib/cli.js:51625:15)
-      at Generator.next (<anonymous>)
-      at step (/usr/lib/node_modules/yarn/lib/cli.js:98:30)
-      at /usr/lib/node_modules/yarn/lib/cli.js:109:13
-      at <anonymous>
-      at process._tickCallback (internal/process/next_tick.js:188:7)
+  Error: Command failed.
+  Exit signal: SIGTERM
+  Command: sh
+  Arguments: -c watchify src/app.js -o bundle.js
+  Directory: /home/matin/Documents/projects/vr-engine
+  Output:
+  
+      at ProcessTermError.MessageError (/usr/lib/node_modules/yarn/lib/cli.js:186:110)
+      at new ProcessTermError (/usr/lib/node_modules/yarn/lib/cli.js:226:113)
+      at ChildProcess.<anonymous> (/usr/lib/node_modules/yarn/lib/cli.js:30281:17)
+      at emitTwo (events.js:125:13)
+      at ChildProcess.emit (events.js:213:7)
+      at maybeClose (internal/child_process.js:927:16)
+      at Process.ChildProcess._handle.onexit (internal/child_process.js:211:5)

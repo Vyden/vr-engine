@@ -33,7 +33,7 @@ const SceneController = {
             //listen for user to start scene
             this.userInitialized = false
             document.addEventListener("click",function() {
-              if (!this.userInitialized) {
+                if (!this.userInitialized) {
                     document.getElementById('video').play()
                     document.getElementById('video').pause()
                     this.userStartScene()
