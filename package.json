@@ -18,6 +18,8 @@
     "aframe-video-controls": "^0.3.0",
     "firebase": "^4.11.0",
     "get-url-param": "^1.0.1",
-    "jquery": "^3.3.1"
+    "jquery": "^3.3.1",
+    "parse-srt": "^1.0.0-alpha",
+    "watchify": "^3.11.0"
   }
 }

@@ -8,6 +8,7 @@ const DataController = require('./data')
 const Model = require('./model')
 const Assets = require('./assets')
 const Sky = require('./sky')
+const SubtitleController = require('./subtitle')
 const $ = dependencies.jquery
 
 const SceneController = {
@@ -32,7 +33,7 @@ const SceneController = {
             //listen for user to start scene
             this.userInitialized = false
             document.addEventListener("click",function() {
-                if(!this.userInitialized) {
+              if (!this.userInitialized) {
                     document.getElementById('video').play()
                     document.getElementById('video').pause()
                     this.userStartScene()
@@ -78,6 +79,9 @@ const SceneController = {
         this.lastItem = this.currentItem
         this.currentItem = this.timeline.shift()
         this.nextItem = this.timeline[0]
+
+        SubtitleController.onItemChange(this.currentItem);
+
         if(!this.currentItem) {
             $(this.stage).append(PrimitiveObjects.getText('Presentation Done',36))
             return
@@ -87,7 +91,7 @@ const SceneController = {
             eventTimeout = this.nextItem.eventTime - this.currentItem.eventTime;
         } else {
             eventTimeout = Timeline.getEventTimeoutForLastItem(this.currentItem)
-        } 
+        }
         if(this.currentItem.type === 'video') {
             $('#videoPlane').attr('visible',true)
             setTimeout(function() {
