@@ -8,11 +8,11 @@ const VideoController = {
 
             init: function() {
                 console.log('video',this,this.el)
-                VideoController.component = this                
+                VideoController.component = this
             },
 
             play: function() {
-                
+
             },
 
         })
@@ -27,7 +27,7 @@ const VideoController = {
         <a-video src="#video" width="16" height="9" position="0 10 8"></a-video>
         `)
     }
-    
+
 }
 
 module.exports = VideoController

@@ -101,7 +101,7 @@ const DataController = {
     },
 
     preloadAssetsForTimeline(timeline,callback) {
-        
+
     }
 }
 

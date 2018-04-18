@@ -42,35 +42,39 @@
             <img id="skyTexture" src="https://cdn.aframe.io/a-painter/images/sky.jpg" crossorigin="anonymous">
             <video id="video"></video>
           </a-assets>
-    
+
           <a-entity id="mainCamera" camera look-controls position="0 10 0">
             <a-text id="lecStart" value="Tap anywhere to\n start lecture..." position="0 0 -1.5" align="center"></a-text>
           </a-entity>
-          
-          <a-entity stage id="stage" position="0 0.1 -24">
+
+
+          <a-entity stage id="stage" position="0 0.5 -24">
             <a-entity video></a-entity>
             <a-image id="loading" src="assets/logo.png" position="0 12 10" scale="3.5 3 3">
               <a-animation attribute="rotation"
                dur="1000"
                fill="forwards"
                to="0 -360 0"
-               easing="linear" 
+               easing="linear"
                repeat="indefinite"></a-animation>
             </a-image>
             <a-video id="videoPlane" src="#video" width="20" height="11.25" position="0 10 6"></a-video>
             <!--<a-text value="Tap anywhere to\n start scene..." position="0 5 10" align="center" width="36"></a-text>-->
-           
           </a-entity>
-    
+
+          <a-entity position="0 10 0">
+            <a-text id="subtitle" value="" position="0 -2.05 -2.8" align="center"></a-text>
+          </a-entity>
+
           <!-- Background sky. -->
           <a-sky height="2048" radius="100" src="#skyTexture" width="2048"></a-sky>
-    
+
           <!-- Ground. -->
           <a-circle id="ground" src="#groundTexture" rotation="-90 0 0" position="0 0.1 0" radius="100"></a-circle>
-          
+
         </a-scene>
         <div id="exitVR">
             <button id="exitBtn">Exit</button>
-          </div>
+        </div>
   </body>
 </html>
