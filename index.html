@@ -26,11 +26,37 @@
         font-size: 20px !important;
       }
 
+      #pauseBtn {
+        background: rgba(0,0,0,.35);
+        color: #FFF;
+        border: 0;
+        bottom: 0;
+        cursor: pointer;
+        min-width: 50px;
+        min-height: 30px;
+        padding: 1%;
+        position: absolute;
+        right: 0;
+        transition: background-color .05s ease;
+        -webkit-transition: background-color .05s ease;
+        z-index: 9999;
+        font-family: sans-serif,monospace;
+        font-size: 20px !important;
+      }
+
       #exitVR {
         width: 100%;
         font-weight: 200;
         position: absolute;
         left: 20px;
+        bottom: 20px;
+      }
+
+      #pauseDesktop {
+        width: 100%;
+        font-weight: 200;
+        position: absolute;
+        right: 20px;
         bottom: 20px;
       }
     </style>
@@ -75,6 +101,9 @@
         </a-scene>
         <div id="exitVR">
             <button id="exitBtn">Exit</button>
+        </div>
+        <div id="pauseDesktop">
+          <button id="pauseBtn">Pause</button>
         </div>
   </body>
 </html>

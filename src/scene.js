@@ -14,7 +14,7 @@ const $ = dependencies.jquery
 const SceneController = {
     initScene() {
         //will be dynamic, for now use sample video
-        $('#videoPlane').attr('visible',false);
+        $('#videoPlane').attr('visible',false)
         $('#lecStart').attr('visible',false)
 
         this.DataController = DataController
@@ -46,10 +46,16 @@ const SceneController = {
                 $('#mainCamera').removeAttr('look-controls')
                 $('a-scene').attr('cursor','rayOrigin: mouse')
                 $(document).css('cursor','pointer !important')
+                $('#pauseDesktop').hide()
+                $('#pauseBtn').click(() => {
+                    this.toggleVideo()
+                })
+            } else {
+                $('#pauseDesktop').remove()
             }
             $('#exitBtn').click(function() {
-                window.history.back();
-            });
+                window.history.back()
+            })
             $('#lecStart').attr('visible',true)
 
         }.bind(this))
@@ -70,19 +76,45 @@ const SceneController = {
         }
     },
 
+    toggleVideo() {
+        if(this.isPaused) {
+            this.resumeVideo()
+            $('#pauseBtn').text("Pause")
+        } else {
+            this.pauseVideo()
+            $('#pauseBtn').text("Resume")
+        }
+    },
+
     pauseVideo() {
         const currentTime = Date.now()
-        const elapsed = this.videoStart - currentTime
-        const ms = elapsed.getMilliseconds()
-        const remainingTime = this.videoItemDuration - ms
+        const elapsed = currentTime - this.videoStart
+        console.log("elapsed",elapsed)
+        console.log("videoStart",this.videoStart,"currentTime",currentTime)
+        const remainingTime = this.videoItemDuration - elapsed
+        console.log("video item duration",this.videoItemDuration)
         console.log("remaining time",remainingTime)
         document.getElementById('video').pause()
+        console.log("should pause")
+        this.remainingTime = remainingTime
+        this.isPaused = true
         clearTimeout(this.videoTimeout)
+    },
+
+    resumeVideo() {
+        this.videoTimeout = setTimeout(function() {
+            document.getElementById('video').pause()
+            this.presentNext()
+        }.bind(this),this.remainingTime)
+        this.videoStart = Date.now()
+        this.videoItemDuration = this.remainingTime
+        document.getElementById('video').play()
+        this.isPaused = false
     },
 
     presentNext() {
         //delta for handling time errors
-        const delta = 500;
+        const delta = 500
         //clear the stage
         Stage.clearStage()
         //set the current item
@@ -90,7 +122,11 @@ const SceneController = {
         this.currentItem = this.timeline.shift()
         this.nextItem = this.timeline[0]
 
-        SubtitleController.onItemChange(this.currentItem);
+        SubtitleController.onItemChange(this.currentItem)
+
+        if(!Util.isMobile()) {
+            $('#pauseDesktop').hide()
+        }
 
         if(!this.currentItem) {
             $(this.stage).append(PrimitiveObjects.getText('Presentation Done',36))
@@ -98,12 +134,17 @@ const SceneController = {
         }
         let eventTimeout = 0
         if(this.nextItem) {
-            eventTimeout = this.nextItem.eventTime - this.currentItem.eventTime;
+            eventTimeout = this.nextItem.eventTime - this.currentItem.eventTime
         } else {
             eventTimeout = Timeline.getEventTimeoutForLastItem(this.currentItem)
         }
         if(this.currentItem.type === 'video') {
             $('#videoPlane').attr('visible',true)
+
+            if(!Util.isMobile()) {
+                $('#pauseDesktop').show()
+            }
+
             setTimeout(function() {
                 document.getElementById('video').play()
                 //set timeout for next item
