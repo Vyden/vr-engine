@@ -8,7 +8,7 @@
     <script src="https://www.gstatic.com/firebasejs/4.10.1/firebase.js"></script>
     <script src="bundle.js"></script>
     <style>
-      #exitBtn {
+      .btn {
         background: rgba(0,0,0,.35);
         color: #FFF;
         border: 0;
@@ -17,8 +17,8 @@
         min-width: 50px;
         min-height: 30px;
         padding: 1%;
-        position: absolute;
-        left: 0;
+        /* position: absolute;
+        left: 0; */
         transition: background-color .05s ease;
         -webkit-transition: background-color .05s ease;
         z-index: 9999;
@@ -26,25 +26,7 @@
         font-size: 20px !important;
       }
 
-      #pauseBtn {
-        background: rgba(0,0,0,.35);
-        color: #FFF;
-        border: 0;
-        bottom: 0;
-        cursor: pointer;
-        min-width: 50px;
-        min-height: 30px;
-        padding: 1%;
-        position: absolute;
-        right: 0;
-        transition: background-color .05s ease;
-        -webkit-transition: background-color .05s ease;
-        z-index: 9999;
-        font-family: sans-serif,monospace;
-        font-size: 20px !important;
-      }
-
-      #exitVR {
+      #leftButtons {
         width: 100%;
         font-weight: 200;
         position: absolute;
@@ -57,6 +39,13 @@
         font-weight: 200;
         position: absolute;
         right: 20px;
+      }
+
+      #toggleSubtitles {
+        width: 100%;
+        font-weight: 200;
+        position: absolute;
+        left: 120px;
         bottom: 20px;
       }
     </style>
@@ -99,11 +88,10 @@
           <a-circle id="ground" src="#groundTexture" rotation="-90 0 0" position="0 0.1 0" radius="100"></a-circle>
 
         </a-scene>
-        <div id="exitVR">
-            <button id="exitBtn">Exit</button>
-        </div>
-        <div id="pauseDesktop">
-          <button id="pauseBtn">Pause</button>
+        <div id="leftButtons">
+            <button id="exitBtn" class="btn">Exit</button>
+            <button id="toggleBtn" class="btn">Sub: ON</button>
+            <button id="pauseBtn" class="btn">Pause</button>
         </div>
   </body>
 </html>

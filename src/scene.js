@@ -37,6 +37,7 @@ const SceneController = {
                     document.getElementById('video').play()
                     document.getElementById('video').pause()
                     this.userStartScene()
+                    SubtitleController.initialTime = new Date();
                 }
             }.bind(this))
             if(!Util.isMobile()) {
@@ -46,12 +47,12 @@ const SceneController = {
                 $('#mainCamera').removeAttr('look-controls')
                 $('a-scene').attr('cursor','rayOrigin: mouse')
                 $(document).css('cursor','pointer !important')
-                $('#pauseDesktop').hide()
+                $('#pauseBtn').hide()
                 $('#pauseBtn').click(() => {
                     this.toggleVideo()
                 })
             } else {
-                $('#pauseDesktop').remove()
+                $('#pauseBtn').remove()
             }
             $('#exitBtn').click(function() {
                 window.history.back()
@@ -125,7 +126,7 @@ const SceneController = {
         SubtitleController.onItemChange(this.currentItem)
 
         if(!Util.isMobile()) {
-            $('#pauseDesktop').hide()
+            $('#pauseBtn').hide()
         }
 
         if(!this.currentItem) {
@@ -142,7 +143,7 @@ const SceneController = {
             $('#videoPlane').attr('visible',true)
 
             if(!Util.isMobile()) {
-                $('#pauseDesktop').show()
+                $('#pauseBtn').show()
             }
 
             setTimeout(function() {
