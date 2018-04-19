@@ -36196,6 +36196,7 @@ const SceneController = {
                     document.getElementById('video').play()
                     document.getElementById('video').pause()
                     this.userStartScene()
+                    SubtitleController.initialTime = new Date();
                 }
             }.bind(this))
             if(!Util.isMobile()) {
@@ -36373,15 +36374,26 @@ const subtitleController = {
     },
 
     startSubtitles() {
+        // console.log('INITIAL TIME: ', ((new Date()) - this.initialTime) / 1000);
         if (this.subs && this.subIndex < this.subs.length) {
-            const subText = this.subs[this.subIndex].text.replace('<br />', '\n');
+            const endTime = new Date();
+            if ((endTime - this.initialTime) / 1000 >= this.subs[this.subIndex].start) {
+                const subText = this.subs[this.subIndex].text.replace('<br />', '\n');
+                document.querySelector('#subtitle').setAttribute('value', subText);
+                clearTimeout(this.timeoutRef);
+                this.timeoutRef = setTimeout(() => {
+                    this.startTime = new Date();
+                    this.startSubtitles()
+                }, (this.subs[this.subIndex].end - this.subs[this.subIndex].start) * 1000);
+                this.subIndex++;
+            } else {
+                const elapsedTime = ((new Date()) - this.initialTime) / 1000;
+                this.timeoutRef = setTimeout(() => {
+                    this.startTime = new Date();
+                    this.startSubtitles();
+                }, (this.subs[this.subIndex].start - elapsedTime) * 1000);
+            }
 
-            document.querySelector('#subtitle').setAttribute('value', subText);
-            this.timeoutRef = setTimeout(() => {
-                this.startTime = new Date();
-                this.startSubtitles()
-            }, (this.subs[this.subIndex].end - this.subs[this.subIndex].start) * 1000);
-            this.subIndex++;
         } else {
             document.querySelector('#subtitle').setAttribute('value', '');
         }
@@ -36390,8 +36402,12 @@ const subtitleController = {
     onItemChange(timelineItem) {
         if (timelineItem) {
             if (timelineItem.type === 'video') {
+                const pauseEnd = new Date();
+                const pauseTime = pauseEnd - this.pauseStart;
+                this.initialTime -= pauseTime;
                 this.startSubtitles();
             } else {
+                this.pauseStart = new Date();
                 if (this.timeoutRef) {
                     clearTimeout(this.timeoutRef);
                     this.subIndex--;
