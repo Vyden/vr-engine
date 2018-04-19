@@ -37,6 +37,7 @@ const SceneController = {
                     document.getElementById('video').play()
                     document.getElementById('video').pause()
                     this.userStartScene()
+                    SubtitleController.initialTime = new Date();
                 }
             }.bind(this))
             if(!Util.isMobile()) {
