@@ -8,7 +8,7 @@
     <script src="https://www.gstatic.com/firebasejs/4.10.1/firebase.js"></script>
     <script src="bundle.js"></script>
     <style>
-      #exitBtn {
+      .btn {
         background: rgba(0,0,0,.35);
         color: #FFF;
         border: 0;
@@ -31,6 +31,14 @@
         font-weight: 200;
         position: absolute;
         left: 20px;
+        bottom: 20px;
+      }
+
+      #toggleSubtitles {
+        width: 100%;
+        font-weight: 200;
+        position: absolute;
+        left: 120px;
         bottom: 20px;
       }
     </style>
@@ -74,7 +82,10 @@
 
         </a-scene>
         <div id="exitVR">
-            <button id="exitBtn">Exit</button>
+            <button id="exitBtn" class="btn">Exit</button>
+        </div>
+        <div id="toggleSubtitles">
+            <button id="toggleBtn" class="btn">Sub: ON</button>
         </div>
   </body>
 </html>
