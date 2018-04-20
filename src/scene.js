@@ -40,6 +40,9 @@ const SceneController = {
                     SubtitleController.initialTime = new Date();
                 }
             }.bind(this))
+            if(!lecture['subtitleURL']) {
+                $('#toggleBtn').remove()
+            }
             if(!Util.isMobile()) {
                 $('.a-enter-vr').remove()
                 $('#lecStart').attr('value','Click anywhere to\n start the lecture...')
@@ -56,6 +59,7 @@ const SceneController = {
                 $('#pauseBtn').remove()
                 $('a-scene').append(PrimitiveObjects.getPauseBox())
                 $('#pauseBox').attr('visible',false)
+                $('#toggleBtn').remove()
             }
             $('#exitBtn').click(function() {
                 window.history.back()

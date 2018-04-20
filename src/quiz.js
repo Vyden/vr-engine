@@ -105,6 +105,7 @@ const QuizController = {
         }.bind(this),2000)
         console.log("submit index: " + index)
         console.log("this scene",this.scene)
+        console.log("resource",this.scene.currentItem.resource)
         this.scene.DataController.submitAnswerForQuiz(this.scene.currentItem.resource,index)
         //send over to firebase
     }
