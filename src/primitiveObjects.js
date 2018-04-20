@@ -50,6 +50,14 @@ const PrimitiveObjectsController = {
                 fill="backwards" from="1 1 1" to="0.1 0.1 0.1"></a-animation>
             </a-entity>
         `)
+    },
+
+    getInvisibleCursor() {
+        return $(`
+            <a-entity id="mobileCursor" cursor="fuse: true; fuseTimeout: 500"
+            position="0 0 -1">
+            </a-entity>
+        `)
     }
 }
 

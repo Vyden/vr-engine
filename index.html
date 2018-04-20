@@ -81,6 +81,13 @@
             <a-text id="subtitle" value="" position="0 -2.05 -2.8" align="center"></a-text>
           </a-entity>
 
+          <a-box id="pauseCube" position="0 1 -8" scale="4.5 1.8 2.7" rotation="-45 0 0" color="#0097A7" pause-listener
+          event-set__enter="_event: mouseenter; scale: 5 2 3"
+          event-set__click="_event: click; scale: 4.5 1.8 2.7"
+          >
+            <a-text id="pauseText" value="Pause" scale="0.75 2 1" position="0 0.1 1.2" align="center"></a-text>
+          </a-box>
+
           <!-- Background sky. -->
           <a-sky height="2048" radius="100" src="#skyTexture" width="2048"></a-sky>
 

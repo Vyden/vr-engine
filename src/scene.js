@@ -53,6 +53,7 @@ const SceneController = {
                 })
             } else {
                 $('#pauseBtn').remove()
+                $('#pauseCube').attr('visible',false)
             }
             $('#exitBtn').click(function() {
                 window.history.back()
@@ -81,9 +82,11 @@ const SceneController = {
         if(this.isPaused) {
             this.resumeVideo()
             $('#pauseBtn').text("Pause")
+            $('#pauseText').attr("Value","Pause")
         } else {
             this.pauseVideo()
             $('#pauseBtn').text("Resume")
+            $('#pauseText').attr("Value","Resume")
         }
     },
 
@@ -127,6 +130,8 @@ const SceneController = {
 
         if(!Util.isMobile()) {
             $('#pauseBtn').hide()
+        } else {
+            $('#pauseCube').attr('visible',false)
         }
 
         if(!this.currentItem) {
@@ -144,7 +149,12 @@ const SceneController = {
 
             if(!Util.isMobile()) {
                 $('#pauseBtn').show()
+            } else {
+                $('#pauseCube').attr('visible',true)
             }
+
+            $('#mainCamera').empty()
+            $('#mainCamera').append(PrimitiveObjects.getInvisibleCursor())
 
             setTimeout(function() {
                 document.getElementById('video').play()
@@ -160,6 +170,7 @@ const SceneController = {
             console.log('start quiz')
             DataController.getQuizFromTimelineItem(this.currentItem,function(quiz) {
                 if(Util.isMobile()) {
+                    $('#mainCamera').empty()
                     $('#mainCamera').append(PrimitiveObjects.getCursor())
                 }
                 console.log("quiz in callback",quiz)
@@ -183,5 +194,13 @@ const SceneController = {
         }
     }
 }
+
+AFRAME.registerComponent('pause-listener', {
+    init: function () {
+      this.el.addEventListener('click', function (event) {
+        document.currentScene.toggleVideo()
+      });
+    }
+  });
 
 module.exports = SceneController
