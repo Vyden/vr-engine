@@ -51,16 +51,19 @@
     </style>
   </head>
   <body>
-      <a-scene vr-mode-ui>
+      <a-scene>
           <a-assets>
             <img id="groundTexture" src="https://cdn.aframe.io/a-painter/images/floor.jpg" crossorigin="anonymous">
             <img id="skyTexture" src="https://cdn.aframe.io/a-painter/images/sky.jpg" crossorigin="anonymous">
             <video id="video"></video>
           </a-assets>
 
-          <a-entity id="mainCamera" camera look-controls position="0 10 0">
-            <a-text id="lecStart" value="Tap anywhere to\n start lecture..." position="0 0 -1.5" align="center"></a-text>
+          <a-entity id="cameraContainer" position="0 5 0">
+            <a-entity id="mainCamera" camera look-controls position="0 10 0">
+              <a-text id="lecStart" value="Tap anywhere to\n start lecture..." position="0 0 -1.5" align="center"></a-text>
+            </a-entity>
           </a-entity>
+          
 
 
           <a-entity stage id="stage" position="0 0.5 -24">
@@ -81,11 +84,11 @@
             <a-text id="subtitle" value="" position="0 -2.05 -2.8" align="center"></a-text>
           </a-entity>
 
-          <a-box id="pauseCube" position="0 1 -8" scale="4.5 1.8 2.7" rotation="-45 0 0" color="#0097A7" pause-listener
+          <a-box id="pauseCube" position="0 1 -12" scale="4.5 1.8 2.7" rotation="-45 0 0" color="#0097A7" pause-listener
           event-set__enter="_event: mouseenter; scale: 5 2 3"
           event-set__click="_event: click; scale: 4.5 1.8 2.7"
           >
-            <a-text id="pauseText" value="Pause" scale="0.75 2 1" position="0 0.1 1.2" align="center"></a-text>
+            <a-text id="pauseText" value="Pause" scale="0.75 2 1" position="0 0.05 1.2" align="center"></a-text>
           </a-box>
 
           <!-- Background sky. -->

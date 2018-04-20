@@ -36221,6 +36221,7 @@ const SceneController = {
                 $('#pauseBtn').click(() => {
                     this.toggleVideo()
                 })
+                $('#cameraContainer').attr('position','0 0 0')
             } else {
                 $('#pauseBtn').remove()
                 $('#pauseCube').attr('visible',false)
@@ -36232,6 +36233,10 @@ const SceneController = {
 
         }.bind(this))
 
+        document.querySelector('a-scene').addEventListener('enter-vr', () => {
+            $('#cameraContainer').attr('position','0 10 0')
+         });
+
         //set properties for desktop viewing
     },
 
@@ -36242,7 +36247,7 @@ const SceneController = {
         if(Util.isMobile()) {
             setTimeout(function() {
                 this.presentNext()
-            }.bind(this),10000)
+            }.bind(this),100)
         } else {
             this.presentNext()
         }
