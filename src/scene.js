@@ -54,7 +54,8 @@ const SceneController = {
                 $('#cameraContainer').attr('position','0 0 0')
             } else {
                 $('#pauseBtn').remove()
-                $('#pauseCube').attr('visible',false)
+                $('a-scene').append(PrimitiveObjects.getPauseBox())
+                $('#pauseBox').attr('visible',false)
             }
             $('#exitBtn').click(function() {
                 window.history.back()
@@ -136,7 +137,7 @@ const SceneController = {
         if(!Util.isMobile()) {
             $('#pauseBtn').hide()
         } else {
-            $('#pauseCube').attr('visible',false)
+            $('#pauseBox').attr('visible',false)
         }
 
         if(!this.currentItem) {
@@ -155,7 +156,7 @@ const SceneController = {
             if(!Util.isMobile()) {
                 $('#pauseBtn').show()
             } else {
-                $('#pauseCube').attr('visible',true)
+                $('#pauseBox').attr('visible',true)
             }
 
             $('#mainCamera').empty()

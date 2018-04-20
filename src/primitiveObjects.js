@@ -58,6 +58,17 @@ const PrimitiveObjectsController = {
             position="0 0 -1">
             </a-entity>
         `)
+    },
+
+    getPauseBox() {
+        return $(`
+        <a-box id="pauseBox" position="0 1 -12" scale="4.5 1.8 2.7" rotation="-45 0 0" color="#0097A7" pause-listener
+          event-set__enter="_event: mouseenter; scale: 5 2 3"
+          event-set__click="_event: click; scale: 4.5 1.8 2.7"
+          >
+            <a-text id="pauseText" value="Pause" scale="0.75 2 1" position="0 0.05 1" align="center"></a-text>
+        </a-box>
+        `)
     }
 }
 
