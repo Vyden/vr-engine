@@ -36530,7 +36530,7 @@ const subtitleController = {
                 this.pauseStart = new Date();
                 if (this.timeoutRef) {
                     clearTimeout(this.timeoutRef);
-                    this.subIndex--;
+                    if(this.subIndex > 0) this.subIndex--;
                     //Get elapsed time since start of subtitle and modify subtitle
                     const endTime = new Date();
                     const elapsedTime = (endTime - this.startTime) / 1000;
